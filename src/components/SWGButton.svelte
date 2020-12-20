@@ -52,18 +52,27 @@ let callbacks = {
             return;
         }
 
-        if(valueIndex === (values.length - 1)) {
-            valueIndex = -1;
-        }
-
-        valueIndex++;
-
         let detail = {
             "controller": controller,
             "data": {
                 "value": value
             }
         };
+
+        if(values.length === 0) {
+            dispatchEvent(
+                "swg-input",
+                detail
+            );
+
+            return;
+        }
+
+        if(valueIndex === (values.length - 1)) {
+            valueIndex = -1;
+        }
+
+        valueIndex++;
 
         dispatchEvent(
             "swg-change",

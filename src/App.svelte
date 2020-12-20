@@ -21,7 +21,7 @@ let callbacks = {
 install();
 
 onMount(function(e) {
-	/*document.body.delegateFor(
+	document.body.delegateFor(
 		".fieldset[context='swg-button'] .swg",
 		"swg-change",
 		function(e) {
@@ -33,7 +33,7 @@ onMount(function(e) {
 
 			e.info.controller.innerHTML = e.info.data.value;
 		}
-	);*/
+	);
 });
 
 </script>
@@ -57,8 +57,7 @@ onMount(function(e) {
 			<SWGButton values={["A","B","C","D","E"]}>
 				DEFAULT
 			</SWGButton>
-			<SWGButton type="text" state="primary" values={["A","B","C","D","E"]}
-			>
+			<SWGButton type="text" state="primary" values={["A","B","C","D","E"]}>
 				PRIMARY
 			</SWGButton>
 			<SWGButton type="text" state="secundary" values={["A","B","C","D","E"]}>
