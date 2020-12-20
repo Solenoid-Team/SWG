@@ -32,25 +32,14 @@ let button             =      null;
 
 let layout = "BTA";
 
-let positionMap = {
-    "left" : "before",
-    "right": "after"
-};
-
-let iconPosition = "left";
-
 let setIconFlag = function () {
-    controller.querySelector(".swg-textfield-content-extra").setAttribute(
-        "icon",
-        null
-    );
-
-    controller.querySelector(
-        ".swg-textfield-content-" + positionMap[iconPosition]
-    ).setAttribute(
-        "icon",
-        true
-    );
+    controller.querySelectorAll(".swg-textfield-content-extra")
+    .forEach(function(element) {
+        element.setAttribute(
+            "icon",
+            true
+        );
+    });
 };
 
 let setTextfieldData = function () {
@@ -100,12 +89,35 @@ let setTextfieldData = function () {
     );
 };
 
+let callbacks = {
+    "change": function (e) {
+        //console.debug(e.detail.data);
+
+        input.type = e.detail.data.value;
+
+        let icon = button.querySelector("i");
+
+        switch(input.type) {
+            case "text":
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            break;
+            case "password":
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            break;
+        }
+    }
+};
+
 onMount(function(e) {
     setIconFlag();
 
     textfield = controller.querySelector(".swg-textfield");
-    button    = textfield.querySelector(".swg-button");
+    button    = textfield.querySelectorAll(".swg-button")[1];
     input     = textfield.querySelector("input");
+
+    input.type = "password";
     
     setTextfieldData();
 
@@ -266,14 +278,21 @@ onMount(function(e) {
         <div class="swg-icon-textfield-content-before" slot="content-before">
             <div class="icon-box">
                 <SWGTextfieldLabel>
-                    <slot name="left"></slot>
+                    <i class="fas fa-lock"></i>
                 </SWGTextfieldLabel>
             </div>
         </div>
         <div class="swg-icon-textfield-content-after" slot="content-after">
-            <SWGButton>
-                SHOWHIDE
-            </SWGButton>
+            <div class="icon-box">
+                <SWGButton
+                    type="text"
+                    state="primary"
+                    values={["text","password"]}
+                    on:swg-change={callbacks.change}
+                >
+                    <i class="fas fa-eye"></i>
+                </SWGButton>
+            </div>
         </div>
     </SWGTextfield>
 </div>
@@ -300,7 +319,7 @@ onMount(function(e) {
 
 }
 
-.swg-icon-textfield :global(.swg-textfield-content-extra[icon=true]) {
+.swg-icon-textfield.swg-icon-password-textfield :global(.swg-textfield-content-extra[icon=true]) {
     padding: 0;
     background-color: transparent;
 }
@@ -323,8 +342,20 @@ onMount(function(e) {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.swg-icon-textfield.swg-icon-password-textfield :global(
+    .swg-textfield-content-before .icon-box .swg-button
+) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.swg-icon-textfield.swg-icon-password-textfield :global(
+    .swg-textfield-content-after .icon-box .swg-button
+) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .swg-icon-textfield .icon-box :global(.swg-button i) {

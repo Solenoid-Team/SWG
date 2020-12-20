@@ -8,7 +8,7 @@ import SWGButton from './components/SWGButton.svelte';
 import SWGTextfield from './components/SWGTextfield.svelte';
 import SWGIconTextfield from './components/SWGIconTextfield.svelte';
 import SWGIconPasswordTextfield from './components/SWGIconPasswordTextfield.svelte';
-import SWGPasswordTextfield from './components/SWGPasswordTextfield.svelte';
+import SWGPasswordTextfield from './components/SWGPasswordTextfield old.svelte';
 import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
 
 install();
@@ -294,16 +294,16 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 
-	<!--<fieldset class="fieldset-swg-password-textfield fieldset-swg-preset-textfield">
+	<fieldset class="fieldset" context="swg-password-textfield">
 		<legend>
 			SWG-Password-Textfield
 		</legend>
 		<div class="content" style="width: 400px;">
-			<SWGPasswordTextfield  placeholder="Password" />
+			<SWGPasswordTextfield />
 		</div>
 	</fieldset>
 
-	<fieldset class="fieldset-swg-numeric-textfield fieldset-swg-preset-textfield">
+	<!--<fieldset class="fieldset-swg-numeric-textfield fieldset-swg-preset-textfield">
 		<legend>
 			SWG-Numeric-Textfield
 		</legend>

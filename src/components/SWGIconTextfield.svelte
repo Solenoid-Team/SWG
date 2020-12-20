@@ -330,8 +330,16 @@ onMount(function(e) {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.swg-icon-textfield .swg-icon-textfield-content-before .icon-box :global(.swg-button) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.swg-icon-textfield .swg-icon-textfield-content-after .icon-box :global(.swg-button) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .swg-icon-textfield .icon-box :global(.swg-button i) {

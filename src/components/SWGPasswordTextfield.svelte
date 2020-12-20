@@ -4,47 +4,52 @@
     Dependencies:
         HTMLUtility.js
         SWGTextfield.svelte
-        fontawesome-free-5.15.1-web
+        SWGButton.svelte
 */
 
-import { onMount } from "svelte";
+import { onMount } from 'svelte';
 
 import SWGTextfield from './SWGTextfield.svelte';
+import SWGTextfieldLabel from './SWGTextfieldLabel.svelte';
 import SWGButton from './SWGButton.svelte';
 
-export let object      =               null;
+export let state        = "default";
 
-export let state       =          "default";
+export let disabled     =     false;
+export let readonly     =     false;
 
-export let disabled    =              false;
-export let readonly    =              false;
+export let label        =        "";
+export let maxLength    = +Infinity;
+export let value        =        "";
+export let placeholder  =        "";
+export let hint         =        "";
 
-export let label       =                 "";
-export let maxLength   =          +Infinity;
-export let value       =                 "";
-export let placeholder =                 "";
-export let hint        =                 "";
+let controller         =      null;
+let textfield          =      null;
+let input              =      null;
+let button             =      null;
 
-let controller         =               null;
-let textfield          =               null;
-let input              =               null;
-let button             =               null;
-let icon               =               null;
+let layout = "TA";
 
-let valueBefore        =               null;
-let valueAfter         =               null;
+let setIconFlag = function () {
+    controller.querySelector(".swg-textfield-content-after")
+    .setAttribute(
+        "icon",
+        true
+    );
+};
 
-let iconClassName      =       "fas fa-eye";
+let setTextfieldData = function () {
+    textfield.setData(
+        "layout",
+        layout
+    );
 
-onMount(function(e) {
-    textfield = controller.querySelector(".swg-textfield");
+    textfield.setData(
+        "state",
+        state
+    );
 
-    button = textfield.querySelector(".swg-button");
-
-    input = textfield.querySelector("input");
-
-    input.type = "password";
-    
     textfield.setData(
         "disabled",
         disabled
@@ -79,15 +84,51 @@ onMount(function(e) {
         "hint",
         hint
     );
+};
 
-    //valueBefore = input.value;
-    valueBefore = value;
+let callbacks = {
+    "change": function (e) {
+        //console.debug(e.detail.data);
+
+        input.type = e.detail.data.value;
+
+        let icon = button.querySelector("i");
+
+        switch(input.type) {
+            case "text":
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            break;
+            case "password":
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            break;
+        }
+    }
+};
+
+onMount(function(e) {
+    setIconFlag();
+
+    textfield = controller.querySelector(".swg-textfield");
+    button    = textfield.querySelector(".swg-button");
+    input     = textfield.querySelector("input");
+
+    input.type = "password";
+    
+    setTextfieldData();
 
     controller.getData = function (key) {
         let messagePrefix = "\n\nCannot get data:\n\n";
         let message = messagePrefix;
 
         switch(key) {
+            case "layout":
+                return layout;
+            break;
+            case "state":
+                return state;
+            break;
             case "disabled":
                 return disabled;
             break;
@@ -101,7 +142,7 @@ onMount(function(e) {
                 return maxLength;
             break;
             case "value":
-                return input.value;
+                return value;
             break;
             case "placeholder":
                 return placeholder;
@@ -109,8 +150,8 @@ onMount(function(e) {
             case "hint":
                 return hint;
             break;
-            case "state":
-                return state;
+            case "iconPosition":
+                return iconPosition;
             break;
             default:
                 message += "\nArgument 'key':";
@@ -119,58 +160,26 @@ onMount(function(e) {
 
                 throw new Error(message);
         }
-    }
+    };
 
     controller.setData = function (
         key,
-        value
+        val
     ) {
         let messagePrefix = "\n\nCannot set data:\n\n";
         let message = messagePrefix;
 
         switch(key) {
-            case "disabled":
-                disabled = value;
+            case "layout":
+                layout = val;
 
                 textfield.setData(
-                    "disabled",
-                    disabled
-                );
-            break;
-            case "readonly":
-                readonly = value;
-
-                textfield.setData(
-                    "readonly",
-                    readonly
-                );
-            break;
-            case "maxLength":
-                maxLength = value;
-
-                textfield.setData(
-                    "maxLength",
-                    maxLength
-                );
-            break;
-            case "value":
-                value = value;
-
-                textfield.setData(
-                    "value",
-                    value
-                );
-            break;
-            case "hint":
-                hint = value;
-
-                textfield.setData(
-                    "hint",
-                    hint
+                    "layout",
+                    layout
                 );
             break;
             case "state":
-                state = value;
+                state = val;
                 
                 textfield.setData(
                     "state",
@@ -182,6 +191,51 @@ onMount(function(e) {
                     (state === "default") ? "primary" : state
                 );
             break;
+            case "disabled":
+                disabled = val;
+
+                textfield.setData(
+                    "disabled",
+                    disabled
+                );
+            break;
+            case "readonly":
+                readonly = val;
+
+                textfield.setData(
+                    "readonly",
+                    readonly
+                );
+            break;
+            case "maxLength":
+                maxLength = val;
+
+                textfield.setData(
+                    "maxLength",
+                    maxLength
+                );
+            break;
+            case "value":
+                value = val;
+
+                textfield.setData(
+                    "value",
+                    value
+                );
+            break;
+            case "hint":
+                hint = val;
+
+                textfield.setData(
+                    "hint",
+                    hint
+                );
+            break;
+            case "iconPosition":
+                iconPosition = val;
+
+                setIconFlag();
+            break;
             default:
                 message += "\nArgument 'key':";
                 message += "\nValue is not recognized";
@@ -189,33 +243,13 @@ onMount(function(e) {
 
                 throw new Error(message);
         }
-    }
+    };
 
     button.delegateFor(
         "",
-        [
-            "swg-input",
-            "swg-change"
-        ],
+        "swg-focuschange",
         function(e) {
             e.originalEvent.stopPropagation();
-        }
-    );
-    
-    button.delegateFor(
-        "",
-        "swg-input",
-        function(e) {
-            //console.debug(e);
-
-            input.focus();
-
-            input.setAttribute(
-                "type",
-                e.data.value
-            );
-
-            iconClassName = (e.data.value === "password" ? "fas fa-eye" : "fas fa-eye-slash");
         }
     );
 });
@@ -224,12 +258,31 @@ onMount(function(e) {
 
 <svelte:options accessors={true} />
 
-<div class="swg swg-textfield swg-password-textfield" bind:this={controller} {object}>
-    <SWGTextfield layout="TA" {state}>
-        <div class="icon-box" slot="content-after">
-            <SWGButton class="icon-button" type="text" state="primary" values={["text","password"]}>
-                <i bind:this={icon} class={iconClassName}></i>
-            </SWGButton>
+<div class="swg swg-textfield swg-password-textfield"
+    bind:this={controller}
+>
+    <SWGTextfield
+        layout="TA"
+        bind:state
+        bind:disabled
+        bind:readonly
+        bind:label
+        bind:maxLength
+        bind:value
+        bind:placeholder
+        bind:hint
+    >
+        <div class="swg-icon-textfield-content-after" slot="content-after">
+            <div class="icon-box">
+                <SWGButton
+                    type="text"
+                    state="primary"
+                    values={["text","password"]}
+                    on:swg-change={callbacks.change}
+                >
+                    <i class="fas fa-eye"></i>
+                </SWGButton>
+            </div>
         </div>
     </SWGTextfield>
 </div>
@@ -252,11 +305,16 @@ onMount(function(e) {
     
 }
 
-.swg-password-textfield {
+.swg-icon-textfield {
 
 }
 
-.icon-box {
+.swg-icon-textfield.swg-icon-password-textfield :global(.swg-textfield-content-extra[icon=true]) {
+    padding: 0;
+    background-color: transparent;
+}
+
+.swg-icon-textfield .icon-box {
     width: 46px;
     height: 46px;
     display: flex;
@@ -265,11 +323,7 @@ onMount(function(e) {
     align-items: center;
 }
 
-.swg-password-textfield :global(.swg-textfield-content-after) {
-    padding: 0 !important;
-}
-
-.swg-password-textfield .icon-box :global(.swg-button) {
+.swg-icon-textfield .icon-box :global(.swg-button) {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -278,12 +332,30 @@ onMount(function(e) {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.swg-icon-textfield.swg-icon-password-textfield :global(
+    .swg-textfield-content-before .icon-box .swg-button
+) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.swg-icon-textfield.swg-icon-password-textfield :global(
+    .swg-textfield-content-after .icon-box .swg-button
+) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
 
-.swg-password-textfield .icon-box :global(.swg-button i) {
+.swg-icon-textfield .icon-box :global(.swg-button i) {
     font-size: 24px;
+}
+
+.swg-icon-textfield :global(
+    .swg-textfield-content-before:hover + .swg-textfield-content input
+) {
+    border-color: #e7e7e7;
 }
 
 </style>
