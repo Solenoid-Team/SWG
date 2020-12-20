@@ -4,44 +4,60 @@
     Dependencies:
         HTMLUtility.js
         SWGTextfield.svelte
-        fontawesome-free-5.15.1-web
+        SWGTextfieldLabel.svelte
 */
 
-import { onMount } from "svelte";
+import { onMount } from 'svelte';
 
 import SWGTextfield from './SWGTextfield.svelte';
-import SWGButton from './SWGButton.svelte';
+import SWGTextfieldLabel from './SWGTextfieldLabel.svelte';
 
-export let object      =      null;
+export let layout       =       "T";
+export let state        = "default";
 
-export let state       = "default";
+export let disabled     =     false;
+export let readonly     =     false;
 
-export let disabled    =     false;
-export let readonly    =     false;
+export let label        =        "";
+export let maxLength    = +Infinity;
+export let value        =        "";
+export let placeholder  =        "";
+export let hint         =        "";
 
-export let label       =        "";
-export let maxLength   = +Infinity;
-export let value       =        "";
-export let placeholder =        "";
-export let hint        =        "";
-
-export let icon        =        "";
+export let iconPosition =    "left";
 
 let controller         =      null;
 let textfield          =      null;
 let input              =      null;
 let button             =      null;
 
-let valueBefore        =      null;
-let valueAfter         =      null;
-
 onMount(function(e) {
+    let positionMap = {
+        "left" : "before",
+        "right": "after"
+    };
+
+    controller.querySelector(
+        ".swg-textfield-content-" + positionMap[iconPosition]
+    ).setAttribute(
+        "icon",
+        true
+    );
+
     textfield = controller.querySelector(".swg-textfield");
-
     button = textfield.querySelector(".swg-button");
-
     input = textfield.querySelector("input");
     
+    textfield.setData(
+        "layout",
+        layout
+    );
+
+    textfield.setData(
+        "state",
+        state
+    );
+
     textfield.setData(
         "disabled",
         disabled
@@ -77,14 +93,17 @@ onMount(function(e) {
         hint
     );
 
-    //valueBefore = input.value;
-    valueBefore = value;
-
     controller.getData = function (key) {
         let messagePrefix = "\n\nCannot get data:\n\n";
         let message = messagePrefix;
 
         switch(key) {
+            case "layout":
+                return layout;
+            break;
+            case "state":
+                return state;
+            break;
             case "disabled":
                 return disabled;
             break;
@@ -106,9 +125,6 @@ onMount(function(e) {
             case "hint":
                 return hint;
             break;
-            case "state":
-                return state;
-            break;
             default:
                 message += "\nArgument 'key':";
                 message += "\nValue is not recognized";
@@ -116,58 +132,26 @@ onMount(function(e) {
 
                 throw new Error(message);
         }
-    }
+    };
 
     controller.setData = function (
         key,
-        value
+        val
     ) {
         let messagePrefix = "\n\nCannot set data:\n\n";
         let message = messagePrefix;
 
         switch(key) {
-            case "disabled":
-                disabled = value;
+            case "layout":
+                layout = val;
 
                 textfield.setData(
-                    "disabled",
-                    disabled
-                );
-            break;
-            case "readonly":
-                readonly = value;
-
-                textfield.setData(
-                    "readonly",
-                    readonly
-                );
-            break;
-            case "maxLength":
-                maxLength = value;
-
-                textfield.setData(
-                    "maxLength",
-                    maxLength
-                );
-            break;
-            case "value":
-                value = value;
-
-                textfield.setData(
-                    "value",
-                    value
-                );
-            break;
-            case "hint":
-                hint = value;
-
-                textfield.setData(
-                    "hint",
-                    hint
+                    "layout",
+                    layout
                 );
             break;
             case "state":
-                state = value;
+                state = val;
                 
                 textfield.setData(
                     "state",
@@ -179,6 +163,46 @@ onMount(function(e) {
                     (state === "default") ? "primary" : state
                 );
             break;
+            case "disabled":
+                disabled = val;
+
+                textfield.setData(
+                    "disabled",
+                    disabled
+                );
+            break;
+            case "readonly":
+                readonly = val;
+
+                textfield.setData(
+                    "readonly",
+                    readonly
+                );
+            break;
+            case "maxLength":
+                maxLength = val;
+
+                textfield.setData(
+                    "maxLength",
+                    maxLength
+                );
+            break;
+            case "value":
+                value = val;
+
+                textfield.setData(
+                    "value",
+                    value
+                );
+            break;
+            case "hint":
+                hint = val;
+
+                textfield.setData(
+                    "hint",
+                    hint
+                );
+            break;
             default:
                 message += "\nArgument 'key':";
                 message += "\nValue is not recognized";
@@ -186,26 +210,17 @@ onMount(function(e) {
 
                 throw new Error(message);
         }
-    }
+    };
 
     button.delegateFor(
         "",
         [
             "swg-input",
-            "swg-change"
+            "swg-change",
+            "swg-focuschange"
         ],
         function(e) {
             e.originalEvent.stopPropagation();
-        }
-    );
-
-    button.delegateFor(
-        "",
-        "swg-input",
-        function(e) {
-            //console.debug(e);
-
-            input.focus();
         }
     );
 });
@@ -213,13 +228,42 @@ onMount(function(e) {
 </script>
 
 <svelte:options accessors={true} />
-
-<div class="swg swg-textfield swg-icon-textfield" bind:this={controller} {object}>
-    <SWGTextfield layout="BT" {state}>
-        <div class="icon-box" slot="content-before">
-            <SWGButton class="icon-button" type="text" state="primary">
-                <i class={icon}></i>
-            </SWGButton>
+// Non funziona più la variazione state dopo e.originalEvent.stopPropagation
+<div class="swg swg-textfield swg-icon-textfield"
+    bind:this={controller}
+>
+    <SWGTextfield
+        bind:layout
+        bind:state
+        bind:disabled
+        bind:readonly
+        bind:label
+        bind:maxLength
+        bind:value
+        bind:placeholder
+        bind:hint
+    >
+        <div class="swg-icon-textfield-content-before" slot="content-before">
+            {#if iconPosition === "left"}
+                <div class="icon-box">
+                    <SWGTextfieldLabel>
+                        <slot name="left"></slot>
+                    </SWGTextfieldLabel>
+                </div>
+            {:else}
+                <slot name="left"></slot>
+            {/if}
+        </div>
+        <div class="swg-icon-textfield-content-after" slot="content-after">
+            {#if iconPosition === "right"}
+                <div class="icon-box">
+                    <SWGTextfieldLabel>
+                        <slot name="right"></slot>
+                    </SWGTextfieldLabel>
+                </div>
+            {:else}
+                <slot name="right"></slot>
+            {/if}
         </div>
     </SWGTextfield>
 </div>
@@ -246,11 +290,12 @@ onMount(function(e) {
 
 }
 
-.swg-icon-textfield :global(.swg-textfield-content-before) {
-    padding: 0 !important;
+.swg-icon-textfield :global(.swg-textfield-content-extra[icon=true]) {
+    padding: 0;
+    background-color: transparent;
 }
 
-:global(.swg-textfield-content-before) .icon-box {
+.swg-icon-textfield .icon-box {
     width: 46px;
     height: 46px;
     display: flex;
@@ -276,7 +321,9 @@ onMount(function(e) {
     font-size: 24px;
 }
 
-.swg-icon-textfield :global(.swg-textfield-content-before:hover + .swg-textfield-content input) {
+.swg-icon-textfield :global(
+    .swg-textfield-content-before:hover + .swg-textfield-content input
+) {
     border-color: #e7e7e7;
 }
 

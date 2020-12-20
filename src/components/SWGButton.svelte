@@ -5,6 +5,8 @@
     HTMLUtility.js
 */
 
+import { onMount } from 'svelte';
+
 import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
@@ -89,8 +91,101 @@ let callbacks = {
         if(e.key === "Enter") {
             controller.click();
         }
+    },
+    "blur": function (e) {
+        //console.debug(e);
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value": value,
+                "focus": false
+            }
+        };
+
+        dispatchEvent(
+            "swg-focuschange",
+            detail
+        );
+    },
+    "focus": function (e) {
+        //console.debug(e);
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value": value,
+                "focus": true
+            }
+        };
+
+        dispatchEvent(
+            "swg-focuschange",
+            detail
+        );
     }
 };
+
+onMount(function(e) {
+    controller.getData = function (key) {
+        let messagePrefix = "\n\nCannot get data:\n\n";
+        let message = messagePrefix;
+
+        switch(key) {
+            case "type":
+                return type;
+            break;
+            case "disabled":
+                return disabled;
+            break;
+            case "state":
+                return state;
+            break;
+            case "values":
+                return values;
+            break;
+            case "value":
+                return value;
+            break;
+            default:
+                message += "\nArgument 'key':";
+                message += "\nValue is not recognized";
+                message += "\n\n";
+
+                throw new Error(message);
+        }
+    };
+
+    
+    controller.setData = function (
+        key,
+        val
+    ) {
+        let messagePrefix = "\n\nCannot set data:\n\n";
+        let message = messagePrefix;
+
+        switch(key) {
+            case "type":
+                type = val;
+            break;
+            case "disabled":
+                disabled = val;
+            break;
+            case "state":
+                state = val;
+            break;
+            case "values":
+                values = val;
+            break;
+            default:
+                message += "\nArgument 'key':";
+                message += "\nValue is not recognized";
+                message += "\n\n";
+
+                throw new Error(message);
+        }
+    };
+});
 
 </script>
 
@@ -103,6 +198,8 @@ let callbacks = {
     {state}
     on:click={callbacks.click}
     on:keydown={callbacks.keydown}
+    on:blur={callbacks.blur}
+    on:focus={callbacks.focus}
 >
     <slot></slot>
 </div>

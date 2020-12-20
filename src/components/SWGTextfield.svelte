@@ -1,13 +1,15 @@
 <script>
 
 /*
-    Dependencies:
-        HTMLUtility.js
+ Dependencies:
+    HTMLUtility.js
 */
 
-import { onMount } from "svelte";
+import { onMount } from 'svelte';
 
-export let object      =      null;
+import { createEventDispatcher } from 'svelte';
+
+const dispatch = createEventDispatcher();
 
 export let layout      =       "T";
 export let state       = "default";
@@ -26,6 +28,24 @@ let input              =      null;
 
 let valueBefore        =      null;
 
+$: if(input !== null) input.disabled = disabled;
+$: if(input !== null) input.readOnly = readonly;
+
+let dispatchEvent = function (
+    eventType,
+    detail
+) {
+    dispatch(
+        eventType,
+        detail
+    );
+    
+    controller.triggerEvent(
+        eventType,
+        detail
+    );
+};
+
 let callbacks = {
     "input": function (e) {
         //console.debug(e);
@@ -40,20 +60,23 @@ let callbacks = {
             return;
         }
 
-        let data = {
-            "value"      : value,
-            "valueBefore": valueBefore
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value"      : value,
+                "valueBefore": valueBefore
+            }
         };
 
-        controller.triggerEvent(
+        dispatchEvent(
             "swg-input",
-            data
+            detail
         );
 
         if(value !== valueBefore) {
-            controller.triggerEvent(
+            dispatchEvent(
                 "swg-change",
-                data
+                detail
             );
         }
 
@@ -62,38 +85,48 @@ let callbacks = {
     "blur": function (e) {
         //console.debug(e);
 
-        let data = {
-            "value": value
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value": value,
+                "focus": false
+            }
         };
 
-        controller.triggerEvent(
-            "swg-blur",
-            data
+        dispatchEvent(
+            "swg-focuschange",
+            detail
         );
     },
     "focus": function (e) {
         //console.debug(e);
 
-        let data = {
-            "value": value
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value": value,
+                "focus": true
+            }
         };
 
-        controller.triggerEvent(
-            "swg-focus",
-            data
+        dispatchEvent(
+            "swg-focuschange",
+            detail
         );
     }
 };
 
 onMount(function(e) {
-    input.disabled = disabled;
-    input.readOnly = readonly;
+    valueBefore = value;
 
     controller.getData = function (key) {
         let messagePrefix = "\n\nCannot get data:\n\n";
         let message = messagePrefix;
 
         switch(key) {
+            case "layout":
+                return layout;
+            break;
             case "state":
                 return state;
             break;
@@ -110,7 +143,7 @@ onMount(function(e) {
                 return maxLength;
             break;
             case "value":
-                return input.value;
+                return value;
             break;
             case "placeholder":
                 return placeholder;
@@ -125,60 +158,42 @@ onMount(function(e) {
 
                 throw new Error(message);
         }
-    }
-
+    };
+    
     controller.setData = function (
         key,
-        value
+        val
     ) {
         let messagePrefix = "\n\nCannot set data:\n\n";
         let message = messagePrefix;
 
         switch(key) {
+            case "layout":
+                layout = val;
+            break;
             case "state":
-                state = value;
-
-                controller.setAttribute(
-                    "state",
-                    state
-                );
+                state = val;
             break;
             case "disabled":
-                disabled = value;
-
-                input.disabled = disabled;
+                disabled = val;
             break;
             case "readonly":
-                readonly = value;
-
-                input.readOnly = readonly;
+                readonly = val;
             break;
             case "label":
-                label = value;
+                label = val;
             break;
             case "maxLength":
-                maxLength = value;
+                maxLength = val;
             break;
             case "value":
-                if(value.length > maxLength) {
-                    message += "\nArgument 'value':";
-                    message += "\nMax-Length limit is exceeded";
-                    message += "\n\n";
-
-                    throw new Error(message);
-                }
-
-                value = value;
-
-                input.value = value;
+                value = val;
             break;
             case "placeholder":
-                placeholder = value;
-
-                input.placeholder = placeholder;
+                placeholder = val;
             break;
             case "hint":
-                hint = value;
+                hint = val;
             break;
             default:
                 message += "\nArgument 'key':";
@@ -187,27 +202,27 @@ onMount(function(e) {
 
                 throw new Error(message);
         }
-    }
-
-    controller.setData(
-        "value",
-        value
-    );
-
-    valueBefore = value;
+    };
 });
 
 </script>
 
 <svelte:options accessors={true} />
 
-<div class="swg swg-textfield" bind:this={controller} {object} {layout} {state}>
+<div class="swg swg-textfield"
+    bind:this={controller}
+    {layout}
+    {state}
+>
     <div class="swg-textfield-box">
         <div class="swg-textfield-content-extra swg-textfield-content-before">
             <slot name="content-before"></slot>
         </div>
         <div class="swg-textfield-content">
-            <input type="text" bind:this={input} bind:value {placeholder}
+            <input type="text"
+                bind:this={input}
+                bind:value
+                {placeholder}
                 on:input={callbacks.input}
                 on:blur={callbacks.blur}
                 on:focus={callbacks.focus}

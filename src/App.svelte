@@ -6,17 +6,11 @@ import { install } from '../public/resources/scripts/HTMLUtility';
 
 import SWGButton from './components/SWGButton.svelte';
 import SWGTextfield from './components/SWGTextfield.svelte';
+import SWGTextfieldLabel from './components/SWGTextfieldLabel.svelte';
 import SWGIconTextfield from './components/SWGIconTextfield.svelte';
 import SWGPasswordTextfield from './components/SWGPasswordTextfield.svelte';
 import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
-
-let callbacks = {
-	"Button": {
-		"change": function (e) {
-			e.detail.controller.innerHTML = e.detail.data.value;
-		}
-	}
-};
+import SwgTextfieldLabel from './components/SWGTextfieldLabel.svelte';
 
 install();
 
@@ -32,6 +26,107 @@ onMount(function(e) {
 			console.debug(e.info.data);
 
 			e.info.controller.innerHTML = e.info.data.value;
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-button'] .swg",
+		"swg-focuschange",
+		function(e) {
+			//console.debug(e);
+
+			console.debug("\nEvent 'swg-focuschange' on SWG-Button");
+
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-textfield'] .swg",
+		"swg-change",
+		function(e) {
+			//console.debug(e);
+
+			console.debug("\nEvent 'swg-change' on SWG-Textfield");
+
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-textfield'] .swg",
+		"swg-focuschange",
+		function(e) {
+			//console.debug(e);
+
+			console.debug("\nEvent 'swg-focuschange' on SWG-Textfield");
+
+			console.debug(e.info.data);
+
+			/*e.source.setData(
+				"disabled",
+				!e.info.data.focus
+			);*/
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-icon-textfield'] .swg-icon-textfield",
+		"swg-change",
+		function(e) {
+			//console.debug(e);
+
+			console.debug("\nEvent 'swg-change' on SWG-Icon-Textfield");
+
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-icon-textfield'] .swg-icon-textfield",
+		"swg-focuschange",
+		function(e) {
+			//console.debug(e);
+
+			console.debug("\nEvent 'swg-focuschange' on SWG-Icon-Textfield");
+
+			console.debug(e.info.data);
+		}
+	);
+
+	let state = [
+		"danger",
+		"warning",
+		"info",
+		"default"
+	];
+
+	let index = -1;
+
+	document.body.delegateFor(
+		".fieldset[context='swg-icon-textfield'] .swg-button",
+		"swg-input",
+		function(e) {
+			//console.debug(e);
+
+			if(index === (state.length - 1)) {
+				index = -1;
+			}
+
+			index++;
+
+			e.source.climbUntil("swg-icon-textfield").setData(
+				"state",
+				state[index]
+			);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-icon-textfield'] .swg-textfield",
+		"swg-focuschange",
+		function(e) {
+			
 		}
 	);
 });
@@ -84,7 +179,7 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 
-	<!--<fieldset class="fieldset-swg-textfield">
+	<fieldset class="fieldset" context="swg-textfield">
 		<legend>
 			SWG-Textfield
 		</legend>
@@ -116,18 +211,42 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 	
-	<fieldset class="fieldset-swg-icon-textfield fieldset-swg-preset-textfield">
+	<fieldset class="fieldset" context="swg-icon-textfield">
 		<legend>
 			SWG-Icon-Textfield
 		</legend>
 		<div class="content" style="width: 400px;">
-			<SWGIconTextfield icon="fas fa-user" placeholder="Login" />
-			<SWGIconTextfield icon="fas fa-envelope" placeholder="Email" maxLength=8 />
-			<SWGIconTextfield icon="fas fa-lock" placeholder="Password" />
+			<SWGIconTextfield
+				layout="BT"
+				iconPosition="left"
+				placeholder="Login"
+			>
+				<div slot="left">
+					<i class="fas fa-user"></i>
+				</div>
+			</SWGIconTextfield>
+			<SWGIconTextfield
+				layout="BT"
+				iconPosition="left"
+				placeholder="Email"
+			>
+				<div slot="left">
+					<i class="fas fa-envelope"></i>
+				</div>
+			</SWGIconTextfield>
+			<SWGIconTextfield
+				layout="BT"
+				iconPosition="left"
+				placeholder="Password"
+			>
+				<div slot="left">
+					<i class="fas fa-lock"></i>
+				</div>
+			</SWGIconTextfield>
 		</div>
 	</fieldset>
 
-	<fieldset class="fieldset-swg-password-textfield fieldset-swg-preset-textfield">
+	<!--<fieldset class="fieldset-swg-password-textfield fieldset-swg-preset-textfield">
 		<legend>
 			SWG-Password-Textfield
 		</legend>
