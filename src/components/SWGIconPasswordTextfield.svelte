@@ -5,14 +5,15 @@
         HTMLUtility.js
         SWGTextfield.svelte
         SWGTextfieldLabel.svelte
+        SWGButton.svelte
 */
 
 import { onMount } from 'svelte';
 
 import SWGTextfield from './SWGTextfield.svelte';
 import SWGTextfieldLabel from './SWGTextfieldLabel.svelte';
+import SWGButton from './SWGButton.svelte';
 
-export let layout       =       "T";
 export let state        = "default";
 
 export let disabled     =     false;
@@ -24,17 +25,19 @@ export let value        =        "";
 export let placeholder  =        "";
 export let hint         =        "";
 
-export let iconPosition =    "left";
-
 let controller         =      null;
 let textfield          =      null;
 let input              =      null;
 let button             =      null;
 
+let layout = "BTA";
+
 let positionMap = {
     "left" : "before",
     "right": "after"
 };
+
+let iconPosition = "left";
 
 let setIconFlag = function () {
     controller.querySelector(".swg-textfield-content-extra").setAttribute(
@@ -246,11 +249,11 @@ onMount(function(e) {
 
 <svelte:options accessors={true} />
 
-<div class="swg swg-textfield swg-icon-textfield"
+<div class="swg swg-textfield swg-icon-textfield swg-icon-password-textfield"
     bind:this={controller}
 >
     <SWGTextfield
-        bind:layout
+        layout="BTA"
         bind:state
         bind:disabled
         bind:readonly
@@ -261,26 +264,16 @@ onMount(function(e) {
         bind:hint
     >
         <div class="swg-icon-textfield-content-before" slot="content-before">
-            {#if iconPosition === "left"}
-                <div class="icon-box">
-                    <SWGTextfieldLabel>
-                        <slot name="left"></slot>
-                    </SWGTextfieldLabel>
-                </div>
-            {:else}
-                <slot name="left"></slot>
-            {/if}
+            <div class="icon-box">
+                <SWGTextfieldLabel>
+                    <slot name="left"></slot>
+                </SWGTextfieldLabel>
+            </div>
         </div>
         <div class="swg-icon-textfield-content-after" slot="content-after">
-            {#if iconPosition === "right"}
-                <div class="icon-box">
-                    <SWGTextfieldLabel>
-                        <slot name="right"></slot>
-                    </SWGTextfieldLabel>
-                </div>
-            {:else}
-                <slot name="right"></slot>
-            {/if}
+            <SWGButton>
+                SHOWHIDE
+            </SWGButton>
         </div>
     </SWGTextfield>
 </div>

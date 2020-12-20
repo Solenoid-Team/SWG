@@ -6,11 +6,10 @@ import { install } from '../public/resources/scripts/HTMLUtility';
 
 import SWGButton from './components/SWGButton.svelte';
 import SWGTextfield from './components/SWGTextfield.svelte';
-import SWGTextfieldLabel from './components/SWGTextfieldLabel.svelte';
 import SWGIconTextfield from './components/SWGIconTextfield.svelte';
+import SWGIconPasswordTextfield from './components/SWGIconPasswordTextfield.svelte';
 import SWGPasswordTextfield from './components/SWGPasswordTextfield.svelte';
 import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
-import SwgTextfieldLabel from './components/SWGTextfieldLabel.svelte';
 
 install();
 
@@ -94,39 +93,79 @@ onMount(function(e) {
 		}
 	);
 
-	let state = [
-		"danger",
-		"warning",
-		"info",
-		"default"
-	];
-
-	let index = -1;
-
 	document.body.delegateFor(
 		".fieldset[context='swg-icon-textfield'] .swg-button",
 		"swg-input",
 		function(e) {
 			//console.debug(e);
 
-			if(index === (state.length - 1)) {
-				index = -1;
+			if(
+				e.source.climbUntil("swg-icon-textfield").getData("placeholder")
+				===
+				"Password"
+			) {
+				return;
 			}
 
-			index++;
+			let iconTextfield = e.source.climbUntil("swg-icon-textfield");
 
-			e.source.climbUntil("swg-icon-textfield").setData(
+			let state = iconTextfield.getData("state");
+
+			switch(state) {
+				case "default":
+					state = "danger";
+				break;
+				case "danger":
+					state = "warning";
+				break;
+				case "warning":
+					state = "info";
+				break;
+				case "info":
+					state = "default";
+				break;
+			}
+
+			iconTextfield.setData(
 				"state",
-				state[index]
+				state
 			);
 		}
 	);
 
 	document.body.delegateFor(
-		".fieldset[context='swg-icon-textfield'] .swg-textfield",
+		".fieldset[context='swg-icon-textfield'] .swg-icon-textfield",
 		"swg-focuschange",
 		function(e) {
-			
+			if(e.info.data.focus) {
+				return;
+			}
+
+			if(e.source.getData("placeholder") !== "Password") {
+				return;
+			}
+
+			let fieldEmpty = (e.info.data.value.length === 0);
+
+			let iconTextfield = e.source;
+
+			iconTextfield.setData(
+				"state",
+				fieldEmpty ? "danger" : "default"
+			);
+
+			let hint =
+				fieldEmpty
+				?
+				iconTextfield.getData("placeholder") + " is empty"
+				:
+				""
+			;
+
+			iconTextfield.setData(
+				"hint",
+				hint
+			);
 		}
 	);
 });
@@ -243,6 +282,15 @@ onMount(function(e) {
 					<i class="fas fa-lock"></i>
 				</div>
 			</SWGIconTextfield>
+		</div>
+	</fieldset>
+	
+	<fieldset class="fieldset" context="swg-icon-password-textfield">
+		<legend>
+			SWG-Icon-Password-Textfield
+		</legend>
+		<div class="content" style="width: 400px;">
+			<SWGIconPasswordTextfield />
 		</div>
 	</fieldset>
 
