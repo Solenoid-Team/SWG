@@ -99,15 +99,15 @@ onMount(function(e) {
 		function(e) {
 			//console.debug(e);
 
+			let iconTextfield = e.source.climbUntil("swg-icon-textfield");
+console.debug(iconTextfield.getData());
 			if(
-				e.source.climbUntil("swg-icon-textfield").getData("placeholder")
+				iconTextfield.getData("placeholder")
 				===
 				"Password"
 			) {
 				return;
 			}
-
-			let iconTextfield = e.source.climbUntil("swg-icon-textfield");
 
 			let state = iconTextfield.getData("state");
 

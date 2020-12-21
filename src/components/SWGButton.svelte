@@ -60,12 +60,12 @@ let callbacks = {
             }
         };
 
-        if(values.length === 0) {
-            dispatchEvent(
-                "swg-input",
-                detail
-            );
+        dispatchEvent(
+            "swg-input",
+            detail
+        );
 
+        if(values.length === 0) {
             return;
         }
 
@@ -224,8 +224,12 @@ let callbacks = {
 
 onMount(function(e) {
     controller.getData = function (key) {
-        const messagePrefix = "\n\nCannot get data:\n\n";
+        const messagePrefix = "\n\nCannot get data:\n";
         let message = messagePrefix;
+
+        if(key === undefined) {
+            return $$props;
+        }
 
         if($$props[key] === undefined || key === "controller") {
             message += "\nProperty '" + key + "' is not recognized";
@@ -241,7 +245,7 @@ onMount(function(e) {
         key,
         val
     ) {
-        const messagePrefix = "\n\nCannot set data:\n\n";
+        const messagePrefix = "\n\nCannot set data:\n";
         let message = messagePrefix;
 
         if($$props[key] === undefined || key === "controller") {
@@ -252,6 +256,8 @@ onMount(function(e) {
         }
 
         $$props[key] = val;
+
+        $$props = $$props;
     };
 });
 

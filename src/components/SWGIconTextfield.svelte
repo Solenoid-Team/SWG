@@ -28,6 +28,7 @@ export let iconPosition =    "left";
 
 let controller         =      null;
 let textfield          =      null;
+let textfieldLabel     =      null;
 let input              =      null;
 let button             =      null;
 
@@ -37,12 +38,12 @@ let positionMap = {
 };
 
 let setIconFlag = function () {
-    controller.querySelector(".swg-textfield-content-extra").setAttribute(
+    textfield.querySelector(".swg-textfield-content-extra").setAttribute(
         "icon",
         null
     );
 
-    controller.querySelector(
+    textfield.querySelector(
         ".swg-textfield-content-" + positionMap[iconPosition]
     ).setAttribute(
         "icon",
@@ -100,80 +101,50 @@ let setTextfieldData = function () {
 onMount(function(e) {
     setIconFlag();
 
-    textfield = controller.querySelector(".swg-textfield");
-    button    = textfield.querySelector(".swg-button");
+    button    = textfieldLabel.querySelector(".swg-button");
     input     = textfield.querySelector("input");
     
     setTextfieldData();
 
     controller.getData = function (key) {
-        let messagePrefix = "\n\nCannot get data:\n\n";
+        const messagePrefix = "\n\nCannot get data:\n";
         let message = messagePrefix;
 
-        switch(key) {
-            case "layout":
-                return layout;
-            break;
-            case "state":
-                return state;
-            break;
-            case "disabled":
-                return disabled;
-            break;
-            case "readonly":
-                return readonly;
-            break;
-            case "label":
-                return label;
-            break;
-            case "maxLength":
-                return maxLength;
-            break;
-            case "value":
-                return value;
-            break;
-            case "placeholder":
-                return placeholder;
-            break;
-            case "hint":
-                return hint;
-            break;
-            case "iconPosition":
-                return iconPosition;
-            break;
-            default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
-                message += "\n\n";
-
-                throw new Error(message);
+        if(key === undefined) {
+            return $$props;
         }
+
+        if($$props[key] === undefined || key === "controller") {
+            message += "\nProperty '" + key + "' is not recognized";
+            message += "\n\n";
+
+            throw new Error(message);
+        }
+
+        return $$props[key];
     };
 
     controller.setData = function (
         key,
         val
     ) {
-        let messagePrefix = "\n\nCannot set data:\n\n";
+        const messagePrefix = "\n\nCannot set data:\n";
         let message = messagePrefix;
 
+        if($$props[key] === undefined || key === "controller") {
+            message += "\nProperty '" + key + "' is not recognized";
+            message += "\n\n";
+
+            throw new Error(message);
+        }
+
+        textfield.setData(
+            key,
+            val
+        );
+
         switch(key) {
-            case "layout":
-                layout = val;
-
-                textfield.setData(
-                    "layout",
-                    layout
-                );
-            break;
             case "state":
-                state = val;
-                
-                textfield.setData(
-                    "state",
-                    state
-                );
-
                 textfield.querySelectorAll(".swg-button")
                 .forEach(function(element) {
                     element.setData(
@@ -182,57 +153,9 @@ onMount(function(e) {
                     );
                 });
             break;
-            case "disabled":
-                disabled = val;
-
-                textfield.setData(
-                    "disabled",
-                    disabled
-                );
-            break;
-            case "readonly":
-                readonly = val;
-
-                textfield.setData(
-                    "readonly",
-                    readonly
-                );
-            break;
-            case "maxLength":
-                maxLength = val;
-
-                textfield.setData(
-                    "maxLength",
-                    maxLength
-                );
-            break;
-            case "value":
-                value = val;
-
-                textfield.setData(
-                    "value",
-                    value
-                );
-            break;
-            case "hint":
-                hint = val;
-
-                textfield.setData(
-                    "hint",
-                    hint
-                );
-            break;
             case "iconPosition":
-                iconPosition = val;
-
                 setIconFlag();
             break;
-            default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
-                message += "\n\n";
-
-                throw new Error(message);
         }
     };
 
@@ -240,7 +163,7 @@ onMount(function(e) {
         "",
         "swg-focuschange",
         function(e) {
-            e.originalEvent.stopPropagation();
+            //e.originalEvent.stopPropagation();
         }
     );
 });
@@ -253,6 +176,8 @@ onMount(function(e) {
     bind:this={controller}
 >
     <SWGTextfield
+        bind:controller={textfield}
+
         bind:layout
         bind:state
         bind:disabled
@@ -266,7 +191,9 @@ onMount(function(e) {
         <div class="swg-icon-textfield-content-before" slot="content-before">
             {#if iconPosition === "left"}
                 <div class="icon-box">
-                    <SWGTextfieldLabel>
+                    <SWGTextfieldLabel
+                        bind:controller={textfieldLabel}
+                    >
                         <slot name="left"></slot>
                     </SWGTextfieldLabel>
                 </div>
@@ -277,7 +204,9 @@ onMount(function(e) {
         <div class="swg-icon-textfield-content-after" slot="content-after">
             {#if iconPosition === "right"}
                 <div class="icon-box">
-                    <SWGTextfieldLabel>
+                    <SWGTextfieldLabel
+                        bind:controller={textfieldLabel}
+                    >
                         <slot name="right"></slot>
                     </SWGTextfieldLabel>
                 </div>

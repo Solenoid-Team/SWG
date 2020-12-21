@@ -121,8 +121,12 @@ onMount(function(e) {
     valueBefore = value;
 
     controller.getData = function (key) {
-        const messagePrefix = "\n\nCannot get data:\n\n";
+        const messagePrefix = "\n\nCannot get data:\n";
         let message = messagePrefix;
+
+        if(key === undefined) {
+            return $$props;
+        }
 
         if($$props[key] === undefined || key === "controller") {
             message += "\nProperty '" + key + "' is not recognized";
@@ -138,7 +142,7 @@ onMount(function(e) {
         key,
         val
     ) {
-        const messagePrefix = "\n\nCannot set data:\n\n";
+        const messagePrefix = "\n\nCannot set data:\n";
         let message = messagePrefix;
 
         if($$props[key] === undefined || key === "controller") {
@@ -157,6 +161,8 @@ onMount(function(e) {
         }
 
         $$props[key] = val;
+
+        $$props = $$props;
     };
 });
 
@@ -172,7 +178,9 @@ onMount(function(e) {
 >
     <div class="swg-textfield-box">
         <div class="swg-textfield-content-extra swg-textfield-content-before">
-            <slot name="content-before"></slot>
+            {#if layout === "BT" || layout === "BTA"}
+                <slot name="content-before"></slot>
+            {/if}
         </div>
         <div class="swg-textfield-content">
             <input type="text"
@@ -190,7 +198,9 @@ onMount(function(e) {
             </div>
         </div>
         <div class="swg-textfield-content-extra swg-textfield-content-after">
-            <slot name="content-after"></slot>
+            {#if layout === "TA" || layout === "BTA"}
+                <slot name="content-after"></slot>
+            {/if}
         </div>
     </div>
     <div class="swg-textfield-hint">

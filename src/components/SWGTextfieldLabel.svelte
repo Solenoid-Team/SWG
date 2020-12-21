@@ -4,7 +4,7 @@ import { onMount } from 'svelte';
 
 import SWGButton from './SWGButton.svelte';
 
-let controller = null;
+export let controller = null;
 
 let callbacks = {
     "swg-input": function (e) {
@@ -19,6 +19,8 @@ onMount(function(e) {
 });
 
 </script>
+
+<svelte:options accessors={true} />
 
 <div class="swg swg-textfield-label"
     bind:this={controller}
