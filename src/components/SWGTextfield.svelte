@@ -11,22 +11,23 @@ import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
-export let layout      =       "T";
-export let state       = "default";
+export let layout             =       "T";
+export let state              = "default";
 
-export let disabled    =     false;
-export let readonly    =     false;
+export let disabled           =     false;
+export let readonly           =     false;
 
-export let label       =        "";
-export let maxLength   = +Infinity;
-export let value       =        "";
-export let placeholder =        "";
-export let hint        =        "";
+export let label              =        "";
+export let maxLength          = +Infinity;
+export let value              =        "";
+export let placeholder        =        "";
+export let hint               =        "";
 
-let controller         =      null;
-let input              =      null;
+export let controller         =      null;
 
-let valueBefore        =      null;
+let input                     =      null;
+
+let valueBefore               =      null;
 
 $: if(input !== null) input.disabled = disabled;
 $: if(input !== null) input.readOnly = readonly;
@@ -120,47 +121,37 @@ onMount(function(e) {
     valueBefore = value;
 
     controller.getData = function (key) {
-        let messagePrefix = "\n\nCannot get data:\n\n";
+        const messagePrefix = "\n\nCannot get data:\n\n";
         let message = messagePrefix;
 
-        switch(key) {
-            case "layout":
-                return layout;
-            break;
-            case "state":
-                return state;
-            break;
-            case "disabled":
-                return disabled;
-            break;
-            case "readonly":
-                return readonly;
-            break;
-            case "label":
-                return label;
-            break;
-            case "maxLength":
-                return maxLength;
-            break;
-            case "value":
-                return value;
-            break;
-            case "placeholder":
-                return placeholder;
-            break;
-            case "hint":
-                return hint;
-            break;
-            default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
-                message += "\n\n";
+        if($$props[key] === undefined || key === "controller") {
+            message += "\nProperty '" + key + "' is not recognized";
+            message += "\n\n";
 
-                throw new Error(message);
+            throw new Error(message);
         }
+
+        return $$props[key];
+    };
+
+    controller.setData = function (
+        key,
+        val
+    ) {
+        const messagePrefix = "\n\nCannot set data:\n\n";
+        let message = messagePrefix;
+
+        if($$props[key] === undefined || key === "controller") {
+            message += "\nProperty '" + key + "' is not recognized";
+            message += "\n\n";
+
+            throw new Error(message);
+        }
+
+        $$props[key] = val;
     };
     
-    controller.setData = function (
+    controller.setDataOriginal = function (
         key,
         val
     ) {

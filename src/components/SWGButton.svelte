@@ -15,6 +15,7 @@ export let type         = "container";
 export let disabled     =       false;
 export let state        =        null;
 export let values       =          [];
+
 export let value        =        null;
 
 export let controller   =        null;
@@ -226,7 +227,7 @@ onMount(function(e) {
         const messagePrefix = "\n\nCannot get data:\n\n";
         let message = messagePrefix;
 
-        if($$props[key] === undefined) {
+        if($$props[key] === undefined || key === "controller") {
             message += "\nProperty '" + key + "' is not recognized";
             message += "\n\n";
 
@@ -243,7 +244,7 @@ onMount(function(e) {
         const messagePrefix = "\n\nCannot set data:\n\n";
         let message = messagePrefix;
 
-        if($$props[key] === undefined) {
+        if($$props[key] === undefined || key === "controller") {
             message += "\nProperty '" + key + "' is not recognized";
             message += "\n\n";
 
