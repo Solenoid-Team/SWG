@@ -21,17 +21,13 @@ export let controller   =        null;
 
 let valueIndex          =           0;
 
-let getValue = function () {
-    let result = null;
-
+$: {
     if(valueIndex >= 0 && valueIndex <= (values.length - 1)) {
-        result = values[valueIndex]
+        value = values[valueIndex];
+    } else {
+        value = null;
     }
-
-    return result;
-};
-
-$: value = getValue();
+}
 
 let dispatchEvent = function (
     eventType,
@@ -126,20 +122,57 @@ let callbacks = {
     "mouseenter": function (e) {
         //console.debug(e);
 
-        if(disabled) {
-            return;
-        }
-
         let detail = {
             "controller": controller,
             "data": {
-                "value": value,
-                "state": "up"
+                "value"   : value,
+                "position": "over",
+                "coords"  : {
+                    "x": e.clientX,
+                    "y": e.clientY
+                }
             }
         };
 
         dispatchEvent(
-            "swg-mousestatechange",
+            "swg-mousepositionchange",
+            detail
+        );
+    },
+    "mouseleave": function (e) {
+        //console.debug(e);
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value"   : value,
+                "position": "out",
+                "coords"  : null
+            }
+        };
+
+        dispatchEvent(
+            "swg-mousepositionchange",
+            detail
+        );
+    },
+    "mousemove": function (e) {
+        //console.debug(e);
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value"   : value,
+                "position": "over",
+                "coords"  : {
+                    "x": e.clientX,
+                    "y": e.clientY
+                }
+            }
+        };
+
+        dispatchEvent(
+            "swg-mousepositionchange",
             detail
         );
     },
