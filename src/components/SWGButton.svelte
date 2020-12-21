@@ -11,25 +11,27 @@ import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
-export let type     = "container";
-export let disabled =       false;
-export let state    =        null;
-export let values   =          [];
+export let type         = "container";
+export let disabled     =       false;
+export let state        =        null;
+export let values       =          [];
+export let value        =        null;
 
-let controller      =        null;
+export let controller   =        null;
 
-let valueIndex      =           0;
-let value           =        null;
+let valueIndex          =           0;
 
-$: value =
-    (
-        (valueIndex >= 0 && valueIndex <= (values.length - 1))
-        ?
-        values[valueIndex]
-        :
-        null
-    )
-;
+let getValue = function () {
+    let result = null;
+
+    if(valueIndex >= 0 && valueIndex <= (values.length - 1)) {
+        result = values[valueIndex]
+    }
+
+    return result;
+};
+
+$: value = getValue();
 
 let dispatchEvent = function (
     eventType,
@@ -81,6 +83,66 @@ let callbacks = {
             detail
         );
     },
+    "mousedown": function (e) {
+        //console.debug(e);
+
+        if(disabled) {
+            return;
+        }
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value": value,
+                "state": "down"
+            }
+        };
+
+        dispatchEvent(
+            "swg-mousestatechange",
+            detail
+        );
+    },
+    "mouseup": function (e) {
+        //console.debug(e);
+
+        if(disabled) {
+            return;
+        }
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value": value,
+                "state": "up"
+            }
+        };
+
+        dispatchEvent(
+            "swg-mousestatechange",
+            detail
+        );
+    },
+    "mouseenter": function (e) {
+        //console.debug(e);
+
+        if(disabled) {
+            return;
+        }
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value": value,
+                "state": "up"
+            }
+        };
+
+        dispatchEvent(
+            "swg-mousestatechange",
+            detail
+        );
+    },
     "keydown": function (e) {
         //console.debug(e);
 
@@ -128,62 +190,34 @@ let callbacks = {
 
 onMount(function(e) {
     controller.getData = function (key) {
-        let messagePrefix = "\n\nCannot get data:\n\n";
+        const messagePrefix = "\n\nCannot get data:\n\n";
         let message = messagePrefix;
 
-        switch(key) {
-            case "type":
-                return type;
-            break;
-            case "disabled":
-                return disabled;
-            break;
-            case "state":
-                return state;
-            break;
-            case "values":
-                return values;
-            break;
-            case "value":
-                return value;
-            break;
-            default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
-                message += "\n\n";
+        if($$props[key] === undefined) {
+            message += "\nProperty '" + key + "' is not recognized";
+            message += "\n\n";
 
-                throw new Error(message);
+            throw new Error(message);
         }
+
+        return $$props[key];
     };
 
-    
     controller.setData = function (
         key,
         val
     ) {
-        let messagePrefix = "\n\nCannot set data:\n\n";
+        const messagePrefix = "\n\nCannot set data:\n\n";
         let message = messagePrefix;
 
-        switch(key) {
-            case "type":
-                type = val;
-            break;
-            case "disabled":
-                disabled = val;
-            break;
-            case "state":
-                state = val;
-            break;
-            case "values":
-                values = val;
-            break;
-            default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
-                message += "\n\n";
+        if($$props[key] === undefined) {
+            message += "\nProperty '" + key + "' is not recognized";
+            message += "\n\n";
 
-                throw new Error(message);
+            throw new Error(message);
         }
+
+        $$props[key] = val;
     };
 });
 
@@ -193,10 +227,16 @@ onMount(function(e) {
 
 <div class="swg swg-button" role=button tabindex=0
     bind:this={controller}
+
     {type}
     {disabled}
     {state}
+
     on:click={callbacks["click"]}
+    on:mousedown={callbacks["mousedown"]}
+    on:mouseup={callbacks["mouseup"]}
+    on:mouseenter={callbacks["mouseenter"]}
+    on:mouseleave={callbacks["mouseleave"]}
     on:keydown={callbacks["keydown"]}
     on:blur={callbacks["blur"]}
     on:focus={callbacks["focus"]}
