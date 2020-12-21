@@ -196,10 +196,10 @@ onMount(function(e) {
     {type}
     {disabled}
     {state}
-    on:click={callbacks.click}
-    on:keydown={callbacks.keydown}
-    on:blur={callbacks.blur}
-    on:focus={callbacks.focus}
+    on:click={callbacks["click"]}
+    on:keydown={callbacks["keydown"]}
+    on:blur={callbacks["blur"]}
+    on:focus={callbacks["focus"]}
 >
     <slot></slot>
 </div>

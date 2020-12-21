@@ -223,9 +223,9 @@ onMount(function(e) {
                 bind:this={input}
                 bind:value
                 {placeholder}
-                on:input={callbacks.input}
-                on:blur={callbacks.blur}
-                on:focus={callbacks.focus}
+                on:input={callbacks["input"]}
+                on:blur={callbacks["blur"]}
+                on:focus={callbacks["focus"]}
             >
             <div class="swg-textfield-label">
                 {label}

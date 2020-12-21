@@ -8,7 +8,7 @@ import SWGButton from './components/SWGButton.svelte';
 import SWGTextfield from './components/SWGTextfield.svelte';
 import SWGIconTextfield from './components/SWGIconTextfield.svelte';
 import SWGIconPasswordTextfield from './components/SWGIconPasswordTextfield.svelte';
-import SWGPasswordTextfield from './components/SWGPasswordTextfield old.svelte';
+import SWGPasswordTextfield from './components/SWGPasswordTextfield.svelte';
 import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
 
 install();
@@ -168,6 +168,96 @@ onMount(function(e) {
 			);
 		}
 	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-icon-password-textfield']"
+		+
+		" .swg-icon-password-textfield",
+		"swg-change",
+		function(e) {
+			//console.debug(e);
+
+			console.debug("\nEvent 'swg-change' on SWG-Icon-Password-Textfield");
+
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-icon-password-textfield']"
+		+
+		" .swg-icon-password-textfield",
+		"swg-focuschange",
+		function(e) {
+			//console.debug(e);
+
+			console.debug(
+				"\nEvent 'swg-focuschange' on SWG-Icon-Password-Textfield"
+			);
+
+			console.debug(e.info.data);
+		}
+	);
+	
+	document.body.delegateFor(
+		".fieldset[context='swg-password-textfield']"
+		+
+		" .swg-password-textfield",
+		"swg-change",
+		function(e) {
+			//console.debug(e);
+
+			console.debug("\nEvent 'swg-change' on SWG-Password-Textfield");
+
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-password-textfield']"
+		+
+		" .swg-password-textfield",
+		"swg-focuschange",
+		function(e) {
+			//console.debug(e);
+
+			console.debug(
+				"\nEvent 'swg-focuschange' on SWG-Password-Textfield"
+			);
+
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-numeric-textfield']"
+		+
+		" .swg-numeric-textfield",
+		"swg-change",
+		function(e) {
+			//console.debug(e);
+
+			console.debug("\nEvent 'swg-change' on SWG-Numeric-Textfield");
+
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-numeric-textfield']"
+		+
+		" .swg-numeric-textfield",
+		"swg-focuschange",
+		function(e) {
+			//console.debug(e);
+
+			console.debug(
+				"\nEvent 'swg-focuschange' on SWG-Numeric-Textfield"
+			);
+
+			console.debug(e.info.data);
+		}
+	);
 });
 
 </script>
@@ -303,22 +393,25 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 
-	<!--<fieldset class="fieldset-swg-numeric-textfield fieldset-swg-preset-textfield">
+	<fieldset class="fieldset" context="swg-numeric-textfield">
 		<legend>
 			SWG-Numeric-Textfield
 		</legend>
 		<div class="content" style="width: 400px;">
-			<SWGNumericTextfield layout="T" minValue=1 maxValue=10 />
-			<SWGNumericTextfield layout="BT" minValue=1 maxValue=10 />
-			<SWGNumericTextfield layout="TA" minValue=1 maxValue=10 />
-			<SWGNumericTextfield layout="BTA" minValue=1 maxValue=10 />
-			<SWGNumericTextfield layout="BTA" minValue=1 maxValue=10>
-				<div slot="content-before">
+			<SWGNumericTextfield controls={false} minValue=1 maxValue=10 />
+			<SWGNumericTextfield controls={true} minValue=1 maxValue=10 />
+			<SWGNumericTextfield custom={true} controls={false} minValue=1 maxValue=10>
+				<div>
+					CUSTOM
+				</div>
+			</SWGNumericTextfield>
+			<SWGNumericTextfield custom={true} minValue=1 maxValue=10>
+				<div>
 					CUSTOM
 				</div>
 			</SWGNumericTextfield>
 		</div>
-	</fieldset>-->
+	</fieldset>
 </main>
 
 <style>

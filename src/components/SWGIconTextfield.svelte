@@ -174,10 +174,13 @@ onMount(function(e) {
                     state
                 );
 
-                button.setData(
-                    "state",
-                    (state === "default") ? "primary" : state
-                );
+                textfield.querySelectorAll(".swg-button")
+                .forEach(function(element) {
+                    element.setData(
+                        "state",
+                        (state === "default") ? "primary" : state
+                    );
+                });
             break;
             case "disabled":
                 disabled = val;
@@ -246,7 +249,7 @@ onMount(function(e) {
 
 <svelte:options accessors={true} />
 
-<div class="swg swg-textfield swg-icon-textfield"
+<div class="swg swg-icon-textfield"
     bind:this={controller}
 >
     <SWGTextfield
@@ -299,15 +302,11 @@ onMount(function(e) {
     box-sizing: border-box;
 }
 
-.swg-textfield {
-    
-}
-
 .swg-icon-textfield {
 
 }
 
-.swg-icon-textfield :global(.swg-textfield-content-extra[icon=true]) {
+.swg-icon-textfield :global(.swg-textfield-content-extra[icon='true']) {
     padding: 0;
     background-color: transparent;
 }

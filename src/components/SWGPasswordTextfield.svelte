@@ -10,7 +10,6 @@
 import { onMount } from 'svelte';
 
 import SWGTextfield from './SWGTextfield.svelte';
-import SWGTextfieldLabel from './SWGTextfieldLabel.svelte';
 import SWGButton from './SWGButton.svelte';
 
 export let state        = "default";
@@ -247,7 +246,11 @@ onMount(function(e) {
 
     button.delegateFor(
         "",
-        "swg-focuschange",
+        [
+            "swg-input",
+            "swg-change",
+            "swg-focuschange"
+        ],
         function(e) {
             e.originalEvent.stopPropagation();
         }
@@ -258,11 +261,11 @@ onMount(function(e) {
 
 <svelte:options accessors={true} />
 
-<div class="swg swg-textfield swg-password-textfield"
+<div class="swg swg-password-textfield"
     bind:this={controller}
 >
     <SWGTextfield
-        layout="TA"
+        bind:layout
         bind:state
         bind:disabled
         bind:readonly
@@ -272,7 +275,7 @@ onMount(function(e) {
         bind:placeholder
         bind:hint
     >
-        <div class="swg-icon-textfield-content-after" slot="content-after">
+        <div class="swg-password-textfield-content-after" slot="content-after">
             <div class="icon-box">
                 <SWGButton
                     type="text"
@@ -301,20 +304,16 @@ onMount(function(e) {
     box-sizing: border-box;
 }
 
-.swg-textfield {
-    
-}
-
-.swg-icon-textfield {
+.swg-password-textfield {
 
 }
 
-.swg-icon-textfield.swg-icon-password-textfield :global(.swg-textfield-content-extra[icon=true]) {
+.swg-password-textfield :global(.swg-textfield-content-extra[icon='true']) {
     padding: 0;
     background-color: transparent;
 }
 
-.swg-icon-textfield .icon-box {
+.swg-password-textfield .icon-box {
     width: 46px;
     height: 46px;
     display: flex;
@@ -323,7 +322,7 @@ onMount(function(e) {
     align-items: center;
 }
 
-.swg-icon-textfield .icon-box :global(.swg-button) {
+.swg-password-textfield .icon-box :global(.swg-button) {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -334,25 +333,25 @@ onMount(function(e) {
     align-items: center;
 }
 
-.swg-icon-textfield.swg-icon-password-textfield :global(
+.swg-password-textfield :global(
     .swg-textfield-content-before .icon-box .swg-button
 ) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-.swg-icon-textfield.swg-icon-password-textfield :global(
+.swg-password-textfield :global(
     .swg-textfield-content-after .icon-box .swg-button
 ) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
 
-.swg-icon-textfield .icon-box :global(.swg-button i) {
+.swg-password-textfield .icon-box :global(.swg-button i) {
     font-size: 24px;
 }
 
-.swg-icon-textfield :global(
+.swg-password-textfield :global(
     .swg-textfield-content-before:hover + .swg-textfield-content input
 ) {
     border-color: #e7e7e7;

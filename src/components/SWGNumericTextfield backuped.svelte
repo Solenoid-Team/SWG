@@ -3,21 +3,19 @@
 /*
     Dependencies:
         HTMLUtility.js
-        SWGTextfield.svelte
         SWGButton.svelte
+        SWGTextfield.svelte
+        fontawesome-free-5.15.1-web
 */
 
-import { onMount } from 'svelte';
-
-import { createEventDispatcher } from 'svelte';
-
-const dispatch = createEventDispatcher();
+import { onMount } from "svelte";
 
 import SWGTextfield from './SWGTextfield.svelte';
 import SWGButton from './SWGButton.svelte';
 
-export let custom      =     false;
-export let controls    =      true;
+export let object      =      null;
+
+export let layout      =       "T";
 export let state       = "default";
 
 export let disabled    =     false;
@@ -25,6 +23,7 @@ export let readonly    =     false;
 
 export let label       =        "";
 export let value       =         0;
+export let placeholder =        "";
 export let hint        =        "";
 
 export let minValue    = -Infinity;
@@ -32,17 +31,14 @@ export let maxValue    = +Infinity;
 
 export let step        =         1;
 
-let layout             =      null;
-
 let controller         =      null;
 let textfield          =      null;
 let input              =      null;
 
 let valueBefore        =      null;
+let valueAfter         =      null;
 
 let normalizeValue = function (val) {
-    val = parseFloat(val);
-
     if(val > maxValue) {
         val = maxValue;
     }
@@ -52,47 +48,17 @@ let normalizeValue = function (val) {
     }
 
     return val;
-};
+}
 
-let getLayout = function () {
-    let result = "";
+$: value = normalizeValue(parseFloat(value));
 
-    if(custom) {
-        result += "B";
-    }
-
-    result += "T";
-
-    if(controls) {
-        result += "A";
-    }
-
-    return result;
-};
-
-let dispatchEvent = function (
-    eventType,
-    detail
-) {
-    dispatch(
-        eventType,
-        detail
-    );
-    
-    controller.triggerEvent(
-        eventType,
-        detail
-    );
-};
-
-$: value = normalizeValue(value);
+$: valueBefore = parseFloat(valueBefore);
+$: valueAfter  = parseFloat(valueAfter);
 
 $: step = parseFloat(value);
 
 $: minValue = parseFloat(minValue);
 $: maxValue = parseFloat(maxValue);
-
-$: layout = getLayout();
 
 let decrementValue = function () {
     valueBefore = parseFloat(value);
@@ -101,28 +67,23 @@ let decrementValue = function () {
 
     value = normalizeValue(value);
 
-    let detail = {
-        "controller": controller,
-        "data": {
-            "value"      : value,
-            "valueBefore": valueBefore
-        }
+    let data = {
+        "value"      : value,
+        "valueBefore": valueBefore
     };
 
-    dispatchEvent(
-        "swg-input",
-        detail
+    controller.triggerEvent(
+        [
+            "swg-input",
+            "swg-decrement"
+        ],
+        data
     );
 
     if(value !== valueBefore) {
-        dispatchEvent(
+        controller.triggerEvent(
             "swg-change",
-            detail
-        );
-
-        dispatchEvent(
-            "swg-decrement",
-            detail
+            data
         );
     }
 }
@@ -133,76 +94,26 @@ let incrementValue = function () {
 
     value = normalizeValue(value);
 
-    let detail = {
-        "controller": controller,
-        "data": {
-            "value"      : value,
-            "valueBefore": valueBefore
-        }
+    let data = {
+        "value"      : value,
+        "valueBefore": valueBefore
     };
 
-    dispatchEvent(
-        "swg-input",
-        detail
+    controller.triggerEvent(
+        [
+            "swg-input",
+            "swg-increment"
+        ],
+        data
     );
 
     if(value !== valueBefore) {
-        dispatchEvent(
+        controller.triggerEvent(
             "swg-change",
-            detail
-        );
-
-        dispatchEvent(
-            "swg-increment",
-            detail
+            data
         );
     }
 }
-
-let setIconFlag = function () {
-    controller.querySelector(".swg-textfield-content-after")
-    .setAttribute(
-        "icon",
-        true
-    );
-};
-
-let setTextfieldData = function () {
-    textfield.setData(
-        "layout",
-        layout
-    );
-
-    textfield.setData(
-        "state",
-        state
-    );
-    
-    textfield.setData(
-        "disabled",
-        disabled
-    );
-    
-    textfield.setData(
-        "readonly",
-        readonly
-    );
-
-    textfield.setData(
-        "label",
-        label
-    );
-
-    textfield.setData(
-        "value",
-        value
-    );
-
-    textfield.setData(
-        "hint",
-        hint
-    );
-};
 
 let callbacks = {
     "input": function (e) {
@@ -212,29 +123,28 @@ let callbacks = {
             return;
         }
 
-        value = normalizeValue(value);
+        valueAfter = parseFloat(value);
 
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value"      : value,
-                "valueBefore": valueBefore
-            }
+        valueAfter = normalizeValue(valueAfter);
+
+        let data = {
+            "value"      : valueAfter,
+            "valueBefore": valueBefore
         };
 
-        dispatchEvent(
+        controller.triggerEvent(
             "swg-input",
-            detail
+            data
         );
 
-        if(value !== valueBefore) {
-            dispatchEvent(
+        if(valueAfter !== valueBefore) {
+            controller.triggerEvent(
                 "swg-change",
-                detail
+                data
             );
         }
 
-        valueBefore = value;
+        valueBefore = valueAfter;
     },
     "keydown": function (e) {
         //console.debug(e);
@@ -295,13 +205,41 @@ let callbacks = {
 };
 
 onMount(function(e) {
-    setIconFlag();
-
     textfield = controller.querySelector(".swg-textfield");
-    input     = textfield.querySelector("input");
-    
-    setTextfieldData();
 
+    input = textfield.querySelector("input");
+    
+    textfield.setData(
+        "disabled",
+        disabled
+    );
+    
+    textfield.setData(
+        "readonly",
+        readonly
+    );
+
+    textfield.setData(
+        "label",
+        label
+    );
+
+    textfield.setData(
+        "value",
+        value
+    );
+
+    textfield.setData(
+        "placeholder",
+        placeholder
+    );
+
+    textfield.setData(
+        "hint",
+        hint
+    );
+
+    //valueBefore = input.value;
     valueBefore = parseFloat(value);
 
     controller.getData = function (key) {
@@ -309,12 +247,6 @@ onMount(function(e) {
         let message = messagePrefix;
 
         switch(key) {
-            case "custom":
-                return custom;
-            break;
-            case "controls":
-                return controls;
-            break;
             case "state":
                 return state;
             break;
@@ -329,6 +261,9 @@ onMount(function(e) {
             break;
             case "value":
                 return input.value;
+            break;
+            case "placeholder":
+                return placeholder;
             break;
             case "hint":
                 return hint;
@@ -353,34 +288,14 @@ onMount(function(e) {
 
     controller.setData = function (
         key,
-        val
+        value
     ) {
         let messagePrefix = "\n\nCannot set data:\n\n";
         let message = messagePrefix;
 
         switch(key) {
-            case "custom":
-                custom = val;
-
-                layout = getLayout();
-
-                textfield.setData(
-                    "layout",
-                    layout
-                );
-            break;
-            case "controls":
-                controls = val;
-
-                layout = getLayout();
-
-                textfield.setData(
-                    "layout",
-                    layout
-                );
-            break;
             case "state":
-                state = val;
+                state = value;
                 
                 textfield.setData(
                     "state",
@@ -393,7 +308,7 @@ onMount(function(e) {
                 );
             break;
             case "disabled":
-                disabled = val;
+                disabled = value;
 
                 textfield.setData(
                     "disabled",
@@ -401,7 +316,7 @@ onMount(function(e) {
                 );
             break;
             case "readonly":
-                readonly = val;
+                readonly = value;
 
                 textfield.setData(
                     "readonly",
@@ -409,7 +324,7 @@ onMount(function(e) {
                 );
             break;
             case "value":
-                value = val;
+                value = value;
 
                 textfield.setData(
                     "value",
@@ -417,7 +332,7 @@ onMount(function(e) {
                 );
             break;
             case "hint":
-                hint = val;
+                hint = value;
 
                 textfield.setData(
                     "hint",
@@ -425,13 +340,13 @@ onMount(function(e) {
                 );
             break;
             case "minValue":
-                minValue = val;
+                minValue = value;
             break;
             case "maxValue":
-                maxValue = val;
+                maxValue = value;
             break;
             case "step":
-                step = val;
+                step = value;
             break;
             default:
                 message += "\nArgument 'key':";
@@ -442,17 +357,33 @@ onMount(function(e) {
         }
     }
 
-    /*controller.delegateFor(
+    controller.delegateFor(
         ".swg-button",
         [
             "swg-input",
-            "swg-change",
-            "swg-focuschange"
+            "swg-change"
         ],
         function(e) {
             e.originalEvent.stopPropagation();
         }
-    );*/
+    );
+
+    controller.delegateFor(
+        ".swg-button",
+        "swg-input",
+        function(e) {
+            //console.debug(e);
+
+            switch(e.data.value) {
+                case "decrement":
+                    decrementValue();
+                break;
+                case "increment":
+                    incrementValue();
+                break;
+            }
+        }
+    );
 
     input.delegateFor(
         "",
@@ -478,39 +409,14 @@ onMount(function(e) {
             if(!e.originalEvent.target.classList.contains("swg-button")) {
                 e.originalEvent.stopPropagation();
 
-                let detail = {
-                    "value"      : parseFloat(e.info.data.value),
-                    "valueBefore": parseFloat(e.info.data.valueBefore)
+                let data = {
+                    "value"      : parseFloat(e.data.value),
+                    "valueBefore": parseFloat(e.data.valueBefore)
                 };
 
-                dispatchEvent(
+                controller.triggerEvent(
                     "swg-input",
-                    detail
-                );
-            }
-        }
-    );
-
-    textfield.delegateFor(
-        "",
-        "swg-focuschange",
-        function(e) {
-            //console.debug(e);
-
-            if(!e.originalEvent.target.classList.contains("swg-button")) {
-                e.originalEvent.stopPropagation();
-
-                let detail = {
-                    "controller": controller,
-                    "data": {
-                        "value": parseFloat(e.info.data.value),
-                        "focus": e.info.data.focus
-                    }
-                };
-
-                dispatchEvent(
-                    "swg-focuschange",
-                    detail
+                    data
                 );
             }
         }
@@ -521,42 +427,20 @@ onMount(function(e) {
 
 <svelte:options accessors={true} />
 
-<div class="swg swg-numeric-textfield"
-    bind:this={controller}
->
-    <SWGTextfield
-        bind:layout
-        bind:state
-        bind:disabled
-        bind:readonly
-        bind:label
-        bind:value
-        bind:hint
-    >
-        <div class="swg-numeric-textfield-content-before" slot="content-before">
-            {#if custom}
-                <slot></slot>
-            {/if}
+<div class="swg swg-textfield swg-numeric-textfield" bind:this={controller} {object}>
+    <SWGTextfield {layout} {state} bind:value>
+        <div class="icon-box" slot="content-before">
+            <slot name="content-before">
+                BEFORE
+            </slot>
         </div>
-        <div class="swg-numeric-textfield-content-after" slot="content-after">
-            {#if controls}
-                <div class="icon-box">
-                    <SWGButton
-                        type="text"
-                        state="primary"
-                        on:swg-input={incrementValue}
-                    >
-                        <i class="fas fa-caret-up"></i>
-                    </SWGButton>
-                    <SWGButton
-                        type="text"
-                        state="primary"
-                        on:swg-input={decrementValue}
-                    >
-                        <i class="fas fa-caret-down"></i>
-                    </SWGButton>
-                </div>
-            {/if}
+        <div class="icon-box" slot="content-after">
+            <SWGButton class="icon-button button-increment" type="text" state="primary" values={["increment"]}>
+                <i class="fas fa-caret-up"></i>
+            </SWGButton>
+            <SWGButton class="icon-button button-decrement" type="text" state="primary" values={["decrement"]}>
+                <i class="fas fa-caret-down"></i>
+            </SWGButton>
         </div>
     </SWGTextfield>
 </div>
@@ -575,16 +459,30 @@ onMount(function(e) {
     box-sizing: border-box;
 }
 
-.swg-numeric-textfield {
+.swg-textfield {
+    
+}
+
+.swg-icon-textfield {
 
 }
 
-.swg-numeric-textfield :global(.swg-textfield-content-extra[icon='true']) {
-    padding: 0;
-    background-color: transparent;
+/*:global(.swg-textfield-content-before) {
+    font-weight: 500;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #00bd9c;
+}*/
+
+/*:global(.swg-textfield-content-before) .icon-box {
+    padding: 0 10px;
+}*/
+
+.swg-numeric-textfield :global(.swg-textfield-content-after) {
+    padding: 0 !important;
 }
 
-.swg-numeric-textfield .icon-box {
+:global(.swg-textfield-content-after) .icon-box {
     width: 46px;
     height: 46px;
     display: flex;
@@ -595,7 +493,7 @@ onMount(function(e) {
 
 .swg-numeric-textfield .icon-box :global(.swg-button) {
     margin: 0;
-    padding: 0;
+    padding: 2px;
     width: 100%;
     height: 100%;
     z-index: 1;
@@ -605,24 +503,18 @@ onMount(function(e) {
     align-items: center;
 }
 
-.swg-numeric-textfield .icon-box :global(.swg-button:first-child) {
+.swg-numeric-textfield .icon-box :global(.swg-button i) {
+    font-size: 16px;
+}
+
+.swg-numeric-textfield .icon-box :global(.swg-button:nth-child(1)) {
     border-radius: 0;
     border-top-right-radius: 5px;
 }
 
-.swg-numeric-textfield .icon-box :global(.swg-button:last-child) {
+.swg-numeric-textfield .icon-box :global(.swg-button:nth-child(2)) {
     border-radius: 0;
     border-bottom-right-radius: 5px;
-}
-
-.swg-numeric-textfield .icon-box :global(.swg-button i) {
-    font-size: 14px;
-}
-
-.swg-numeric-textfield :global(
-    .swg-textfield-content-before:hover + .swg-textfield-content input
-) {
-    border-color: #e7e7e7;
 }
 
 </style>

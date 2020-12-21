@@ -7,7 +7,7 @@ import SWGButton from './SWGButton.svelte';
 let controller = null;
 
 let callbacks = {
-    "input": function (e) {
+    "swg-input": function (e) {
         //console.debug(e);
 
         controller.climbUntil("swg-textfield").querySelector("input").focus();
@@ -26,7 +26,7 @@ onMount(function(e) {
     <SWGButton
         type="text"
         state="primary"
-        on:swg-input={callbacks.input}
+        on:swg-input={callbacks["swg-input"]}
     >
         <slot></slot>
     </SWGButton>

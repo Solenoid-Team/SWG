@@ -28,6 +28,7 @@ export let hint         =        "";
 let controller         =      null;
 let textfield          =      null;
 let input              =      null;
+let buttons            =      null;
 let button             =      null;
 
 let layout = "BTA";
@@ -90,7 +91,7 @@ let setTextfieldData = function () {
 };
 
 let callbacks = {
-    "change": function (e) {
+    "swg-change": function (e) {
         //console.debug(e.detail.data);
 
         input.type = e.detail.data.value;
@@ -114,7 +115,8 @@ onMount(function(e) {
     setIconFlag();
 
     textfield = controller.querySelector(".swg-textfield");
-    button    = textfield.querySelectorAll(".swg-button")[1];
+    buttons   = textfield.querySelectorAll(".swg-button");
+    button    = buttons[1];
     input     = textfield.querySelector("input");
 
     input.type = "password";
@@ -248,9 +250,20 @@ onMount(function(e) {
         }
     };
 
+    textfield.delegateFor(
+        ".swg-button",
+        "swg-focuschange",
+        function(e) {
+            e.originalEvent.stopPropagation();
+        }
+    );
+
     button.delegateFor(
         "",
-        "swg-focuschange",
+        [
+            "swg-input",
+            "swg-change"
+        ],
         function(e) {
             e.originalEvent.stopPropagation();
         }
@@ -261,11 +274,11 @@ onMount(function(e) {
 
 <svelte:options accessors={true} />
 
-<div class="swg swg-textfield swg-icon-textfield swg-icon-password-textfield"
+<div class="swg swg-icon-password-textfield"
     bind:this={controller}
 >
     <SWGTextfield
-        layout="BTA"
+        bind:layout
         bind:state
         bind:disabled
         bind:readonly
@@ -275,20 +288,20 @@ onMount(function(e) {
         bind:placeholder
         bind:hint
     >
-        <div class="swg-icon-textfield-content-before" slot="content-before">
+        <div class="swg-icon-password-textfield-content-before" slot="content-before">
             <div class="icon-box">
                 <SWGTextfieldLabel>
                     <i class="fas fa-lock"></i>
                 </SWGTextfieldLabel>
             </div>
         </div>
-        <div class="swg-icon-textfield-content-after" slot="content-after">
+        <div class="swg-icon-password-textfield-content-after" slot="content-after">
             <div class="icon-box">
                 <SWGButton
                     type="text"
                     state="primary"
                     values={["text","password"]}
-                    on:swg-change={callbacks.change}
+                    on:swg-change={callbacks["swg-change"]}
                 >
                     <i class="fas fa-eye"></i>
                 </SWGButton>
@@ -311,20 +324,16 @@ onMount(function(e) {
     box-sizing: border-box;
 }
 
-.swg-textfield {
-    
-}
-
-.swg-icon-textfield {
+.swg-icon-password-textfield {
 
 }
 
-.swg-icon-textfield.swg-icon-password-textfield :global(.swg-textfield-content-extra[icon=true]) {
+.swg-icon-password-textfield :global(.swg-textfield-content-extra[icon='true']) {
     padding: 0;
     background-color: transparent;
 }
 
-.swg-icon-textfield .icon-box {
+.swg-icon-password-textfield .icon-box {
     width: 46px;
     height: 46px;
     display: flex;
@@ -333,7 +342,7 @@ onMount(function(e) {
     align-items: center;
 }
 
-.swg-icon-textfield .icon-box :global(.swg-button) {
+.swg-icon-password-textfield .icon-box :global(.swg-button) {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -344,25 +353,25 @@ onMount(function(e) {
     align-items: center;
 }
 
-.swg-icon-textfield.swg-icon-password-textfield :global(
+.swg-icon-password-textfield :global(
     .swg-textfield-content-before .icon-box .swg-button
 ) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-.swg-icon-textfield.swg-icon-password-textfield :global(
+.swg-icon-password-textfield :global(
     .swg-textfield-content-after .icon-box .swg-button
 ) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
 
-.swg-icon-textfield .icon-box :global(.swg-button i) {
+.swg-icon-password-textfield .icon-box :global(.swg-button i) {
     font-size: 24px;
 }
 
-.swg-icon-textfield :global(
+.swg-icon-password-textfield :global(
     .swg-textfield-content-before:hover + .swg-textfield-content input
 ) {
     border-color: #e7e7e7;
