@@ -148,51 +148,15 @@ onMount(function(e) {
             throw new Error(message);
         }
 
-        $$props[key] = val;
-    };
-    
-    controller.setDataOriginal = function (
-        key,
-        val
-    ) {
-        let messagePrefix = "\n\nCannot set data:\n\n";
-        let message = messagePrefix;
-
         switch(key) {
-            case "layout":
-                layout = val;
-            break;
-            case "state":
-                state = val;
-            break;
-            case "disabled":
-                disabled = val;
-            break;
-            case "readonly":
-                readonly = val;
-            break;
-            case "label":
-                label = val;
-            break;
-            case "maxLength":
-                maxLength = val;
-            break;
             case "value":
-                value = val;
+                if(value.length > maxLength) {
+                    return;
+                }
             break;
-            case "placeholder":
-                placeholder = val;
-            break;
-            case "hint":
-                hint = val;
-            break;
-            default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
-                message += "\n\n";
-
-                throw new Error(message);
         }
+
+        $$props[key] = val;
     };
 });
 
@@ -202,6 +166,7 @@ onMount(function(e) {
 
 <div class="swg swg-textfield"
     bind:this={controller}
+
     {layout}
     {state}
 >
@@ -213,7 +178,9 @@ onMount(function(e) {
             <input type="text"
                 bind:this={input}
                 bind:value
+
                 {placeholder}
+
                 on:input={callbacks["input"]}
                 on:blur={callbacks["blur"]}
                 on:focus={callbacks["focus"]}
