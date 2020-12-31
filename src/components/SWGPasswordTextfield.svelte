@@ -19,69 +19,21 @@ export let readonly     =     false;
 
 export let label        =        "";
 export let maxLength    =      null;
-export let value        =        "";
 export let placeholder  =        "";
 export let hint         =        "";
 
-let controller         =      null;
+export let controller   =      null;
+export let value        =        "";
+
 let textfield          =      null;
 let input              =      null;
 let button             =      null;
-
-let layout = "TA";
 
 let setIconFlag = function () {
     controller.querySelector(".swg-textfield-content-after")
     .setAttribute(
         "icon",
         true
-    );
-};
-
-let setTextfieldData = function () {
-    textfield.setData(
-        "layout",
-        layout
-    );
-
-    textfield.setData(
-        "state",
-        state
-    );
-
-    textfield.setData(
-        "disabled",
-        disabled
-    );
-    
-    textfield.setData(
-        "readonly",
-        readonly
-    );
-
-    textfield.setData(
-        "label",
-        label
-    );
-
-    textfield.setData(
-        "maxLength",
-        maxLength
-    );
-
-    textfield.setData(
-        "value",
-        value
-    );
-
-    textfield.setData(
-        "placeholder",
-        placeholder
-    );
-
-    textfield.setData(
-        "hint",
-        hint
     );
 };
 
@@ -109,52 +61,43 @@ let callbacks = {
 onMount(function(e) {
     setIconFlag();
 
-    textfield = controller.querySelector(".swg-textfield");
-    button    = textfield.querySelector(".swg-button");
-    input     = textfield.querySelector("input");
+    input = textfield.querySelector("input");
 
     input.type = "password";
-    
-    setTextfieldData();
 
     controller.getData = function (key) {
-        let messagePrefix = "\n\nCannot get data:\n\n";
+        const messagePrefix = "\n\nCannot get data:\n";
         let message = messagePrefix;
 
+        let properties = {
+            "state"       : state,
+            "disabled"    : disabled,
+            "readonly"    : readonly,
+            "label"       : label,
+            "maxLength"   : maxLength,
+            "placeholder" : placeholder,
+            "hint"        : hint,
+
+            "value"       : value
+        };
+
+        if(key === undefined) {
+            return properties;
+        }
+
         switch(key) {
-            case "layout":
-                return layout;
-            break;
             case "state":
-                return state;
-            break;
             case "disabled":
-                return disabled;
-            break;
-            case "readonly":
-                return readonly;
-            break;
+            case "readony":
             case "label":
-                return label;
-            break;
             case "maxLength":
-                return maxLength;
-            break;
-            case "value":
-                return value;
-            break;
             case "placeholder":
-                return placeholder;
-            break;
             case "hint":
-                return hint;
-            break;
-            case "iconPosition":
-                return iconPosition;
+            case "value":
+                return properties[key];
             break;
             default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
+                message += "\nProperty '" + key + "' is not recognized";
                 message += "\n\n";
 
                 throw new Error(message);
@@ -165,79 +108,41 @@ onMount(function(e) {
         key,
         val
     ) {
-        let messagePrefix = "\n\nCannot set data:\n\n";
+        const messagePrefix = "\n\nCannot set data:\n";
         let message = messagePrefix;
 
         switch(key) {
-            case "layout":
-                layout = val;
-
-                textfield.setData(
-                    "layout",
-                    layout
-                );
-            break;
             case "state":
                 state = val;
-                
+
                 textfield.setData(
                     "state",
                     state
                 );
-
-                button.setData(
-                    "state",
-                    (state === "default") ? "primary" : state
-                );
             break;
             case "disabled":
                 disabled = val;
-
-                textfield.setData(
-                    "disabled",
-                    disabled
-                );
             break;
             case "readonly":
                 readonly = val;
-
-                textfield.setData(
-                    "readonly",
-                    readonly
-                );
+            break;
+            case "label":
+                label = val;
             break;
             case "maxLength":
                 maxLength = val;
-
-                textfield.setData(
-                    "maxLength",
-                    maxLength
-                );
             break;
-            case "value":
-                value = val;
-
-                textfield.setData(
-                    "value",
-                    value
-                );
+            case "placeholder":
+                placeholder = val;
             break;
             case "hint":
                 hint = val;
-
-                textfield.setData(
-                    "hint",
-                    hint
-                );
             break;
-            case "iconPosition":
-                iconPosition = val;
-
-                setIconFlag();
+            case "value":
+                value = val;
             break;
             default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
+                message += "\nProperty '" + key + "' is not recognized";
                 message += "\n\n";
 
                 throw new Error(message);
@@ -265,19 +170,28 @@ onMount(function(e) {
     bind:this={controller}
 >
     <SWGTextfield
-        bind:layout
+        bind:controller={textfield}
+        bind:value
+
         bind:state
         bind:disabled
         bind:readonly
         bind:label
         bind:maxLength
-        bind:value
         bind:placeholder
         bind:hint
+
+        layout="TA"
+
+        on:swg-input
+        on:swg-change
+        on:swg-focuschange
     >
         <div class="swg-password-textfield-content-after" slot="content-after">
             <div class="icon-box">
                 <SWGButton
+                    bind:controller={button}
+
                     type="text"
                     state="primary"
                     values={["text","password"]}
