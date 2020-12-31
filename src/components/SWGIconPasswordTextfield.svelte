@@ -11,7 +11,6 @@
 import { onMount } from 'svelte';
 
 import SWGIconTextfield from './SWGIconTextfield.svelte';
-import SWGTextfieldLabel from './SWGTextfieldLabel.svelte';
 import SWGButton from './SWGButton.svelte';
 
 export let state        = "default";
@@ -29,8 +28,7 @@ export let value        =        "";
 
 let iconTextfield       =      null;
 let input               =      null;
-
-let layout = "BTA";
+let button              =      null;
 
 let setIconFlag = function () {
     controller.querySelectorAll(".swg-textfield-content-extra")
@@ -40,53 +38,6 @@ let setIconFlag = function () {
             true
         );
     });
-};
-
-let setTextfieldData = function () {
-    textfield.setData(
-        "layout",
-        layout
-    );
-
-    textfield.setData(
-        "state",
-        state
-    );
-
-    textfield.setData(
-        "disabled",
-        disabled
-    );
-    
-    textfield.setData(
-        "readonly",
-        readonly
-    );
-
-    textfield.setData(
-        "label",
-        label
-    );
-
-    textfield.setData(
-        "maxLength",
-        maxLength
-    );
-
-    textfield.setData(
-        "value",
-        value
-    );
-
-    textfield.setData(
-        "placeholder",
-        placeholder
-    );
-
-    textfield.setData(
-        "hint",
-        hint
-    );
 };
 
 let callbacks = {
@@ -167,19 +118,10 @@ onMount(function(e) {
             case "state":
                 state = val;
 
-                let btnState = state;
-
-                if(state === "default") {
-                    btnState = "primary";
-                }
-                
-                iconTextfield.querySelectorAll(".swg-button")
-                .forEach(function(element) {
-                    element.setData(
-                        "state",
-                        btnState
-                    );
-                });
+                iconTextfield.setData(
+                    "state",
+                    state
+                );
             break;
             case "disabled":
                 disabled = val;
@@ -200,10 +142,6 @@ onMount(function(e) {
                 hint = val;
             break;
             case "value":
-                if(val > maxLength) {
-                    val = maxLength;
-                }
-
                 value = val;
             break;
             default:
@@ -214,24 +152,17 @@ onMount(function(e) {
         }
     };
 
-    /*iconTextfield.delegateFor(
-        ".swg-button",
-        "swg-focuschange",
-        function(e) {
-            e.originalEvent.stopPropagation();
-        }
-    );
-
     button.delegateFor(
         "",
         [
             "swg-input",
-            "swg-change"
+            "swg-change",
+            "swg-focuschange"
         ],
         function(e) {
             e.originalEvent.stopPropagation();
         }
-    );*/
+    );
 });
 
 </script>
@@ -245,7 +176,6 @@ onMount(function(e) {
         bind:controller={iconTextfield}
         bind:value
 
-        bind:layout
         bind:state
         bind:disabled
         bind:readonly
@@ -254,7 +184,12 @@ onMount(function(e) {
         bind:placeholder
         bind:hint
         
+        layout="BTA"
         iconPosition="left"
+
+        on:swg-input
+        on:swg-change
+        on:swg-focuschange
     >
         <div class="swg-icon-password-textfield-content-before" slot="left">
             <i class="fas fa-lock"></i>
@@ -262,6 +197,8 @@ onMount(function(e) {
         <div class="swg-icon-password-textfield-content-after" slot="right">
             <div class="icon-box">
                 <SWGButton
+                    bind:controller={button}
+
                     type="text"
                     state="primary"
                     values={["text","password"]}

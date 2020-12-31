@@ -259,7 +259,7 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 	
-	<!--<fieldset class="fieldset" context="swg-icon-password-textfield">
+	<fieldset class="fieldset" context="swg-icon-password-textfield">
 		<legend>
 			SWG-Icon-Password-Textfield
 		</legend>
@@ -268,7 +268,7 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 
-	<fieldset class="fieldset" context="swg-password-textfield">
+	<!--<fieldset class="fieldset" context="swg-password-textfield">
 		<legend>
 			SWG-Password-Textfield
 		</legend>
