@@ -14,6 +14,8 @@ import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
 install();
 
 onMount(function(e) {
+	// SWG-Button
+
 	document.body.delegateFor(
 		".fieldset[context='swg-button'] .swg-button",
 		"swg-change",
@@ -22,6 +24,35 @@ onMount(function(e) {
 			console.debug(e.info.data);
 
 			e.info.controller.innerHTML = e.info.controller.getData("value");
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-button'] .swg-button",
+		"swg-focuschange",
+		function(e) {
+			console.debug("\n'swg-focuschange' on SWG-Button");
+			console.debug(e.info.data);
+		}
+	);
+
+	// SWG-Textfield
+
+	document.body.delegateFor(
+		".fieldset[context='swg-textfield'] .swg-textfield",
+		"swg-change",
+		function(e) {
+			console.debug("\n'swg-change' on SWG-Textfield");
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-textfield'] .swg-textfield",
+		"swg-focuschange",
+		function(e) {
+			console.debug("\n'swg-focuschange' on SWG-Textfield");
+			console.debug(e.info.data);
 		}
 	);
 });
