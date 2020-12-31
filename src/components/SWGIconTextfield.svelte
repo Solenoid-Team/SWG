@@ -30,7 +30,6 @@ export let value        =        "";
 
 let textfield          =      null;
 let textfieldLabel     =      null;
-let input              =      null;
 let button             =      null;
 
 let positionMap = {
@@ -57,14 +56,102 @@ let setIconFlag = function () {
 onMount(function(e) {
     setIconFlag();
 
-    button    = textfieldLabel.querySelector(".swg-button");
-    input     = textfield.querySelector("input");
+    button = textfieldLabel.querySelector(".swg-button");
+
+    controller.getData = function (key) {
+        const messagePrefix = "\n\nCannot get data:\n";
+        let message = messagePrefix;
+
+        let properties = {
+            "layout"      : layout,
+            "state"       : state,
+            "disabled"    : disabled,
+            "readonly"    : readonly,
+            "label"       : label,
+            "maxLength"   : maxLength,
+            "placeholder" : placeholder,
+            "hint"        : hint,
+            "iconPosition": iconPosition,
+
+            "value"       : value
+        };
+
+        if(key === undefined) {
+            return properties;
+        }
+
+        switch(key) {
+            case "layout":
+            case "state":
+            case "disabled":
+            case "readony":
+            case "label":
+            case "maxLength":
+            case "placeholder":
+            case "hint":
+            case "iconPosition":
+            case "value":
+                return properties[key];
+            break;
+            default:
+                message += "\nProperty '" + key + "' is not recognized";
+                message += "\n\n";
+
+                throw new Error(message);
+        }
+    };
+
+    controller.setData = function (
+        key,
+        val
+    ) {
+        const messagePrefix = "\n\nCannot set data:\n";
+        let message = messagePrefix;
+
+        switch(key) {
+            case "layout":
+                layout = val;
+            break;
+            case "state":
+                state = val;
+            break;
+            case "disabled":
+                disabled = val;
+            break;
+            case "readonly":
+                readonly = val;
+            break;
+            case "label":
+                label = val;
+            break;
+            case "maxLength":
+                maxLength = val;
+            break;
+            case "placeholder":
+                placeholder = val;
+            break;
+            case "hint":
+                hint = val;
+            break;
+            case "iconPosition":
+                iconPosition = val;
+            break;
+            case "value":
+                value = val;
+            break;
+            default:
+                message += "\nProperty '" + key + "' is not recognized";
+                message += "\n\n";
+
+                throw new Error(message);
+        }
+    };
 
     button.delegateFor(
         "",
         "swg-focuschange",
         function(e) {
-            //e.originalEvent.stopPropagation();
+            e.originalEvent.stopPropagation();
         }
     );
 });

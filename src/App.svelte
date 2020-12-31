@@ -55,6 +55,26 @@ onMount(function(e) {
 			console.debug(e.info.data);
 		}
 	);
+
+	// SWG-Icon-Textfield
+
+	document.body.delegateFor(
+		".fieldset[context='swg-icon-textfield'] .swg-icon-textfield",
+		"swg-change",
+		function(e) {
+			console.debug("\n'swg-change' on SWG-Icon-Textfield");
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-icon-textfield'] .swg-icon-textfield",
+		"swg-focuschange",
+		function(e) {
+			console.debug("\n'swg-focuschange' on SWG-Icon-Textfield");
+			console.debug(e.info.data);
+		}
+	);
 });
 
 </script>
