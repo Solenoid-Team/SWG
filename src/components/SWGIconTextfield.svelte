@@ -19,14 +19,15 @@ export let disabled     =     false;
 export let readonly     =     false;
 
 export let label        =        "";
-export let maxLength    = +Infinity;
-export let value        =        "";
+export let maxLength    =      null;
 export let placeholder  =        "";
 export let hint         =        "";
 
 export let iconPosition =    "left";
 
-let controller         =      null;
+export let controller   =      null;
+export let value        =        "";
+
 let textfield          =      null;
 let textfieldLabel     =      null;
 let input              =      null;
@@ -38,7 +39,9 @@ let positionMap = {
 };
 
 let setIconFlag = function () {
-    textfield.querySelector(".swg-textfield-content-extra").setAttribute(
+    textfield.querySelector(
+        ".swg-textfield-content-extra"
+    ).setAttribute(
         "icon",
         null
     );
@@ -51,113 +54,11 @@ let setIconFlag = function () {
     );
 };
 
-let setTextfieldData = function () {
-    textfield.setData(
-        "layout",
-        layout
-    );
-
-    textfield.setData(
-        "state",
-        state
-    );
-
-    textfield.setData(
-        "disabled",
-        disabled
-    );
-    
-    textfield.setData(
-        "readonly",
-        readonly
-    );
-
-    textfield.setData(
-        "label",
-        label
-    );
-
-    textfield.setData(
-        "maxLength",
-        maxLength
-    );
-
-    textfield.setData(
-        "value",
-        value
-    );
-
-    textfield.setData(
-        "placeholder",
-        placeholder
-    );
-
-    textfield.setData(
-        "hint",
-        hint
-    );
-};
-
 onMount(function(e) {
     setIconFlag();
 
     button    = textfieldLabel.querySelector(".swg-button");
     input     = textfield.querySelector("input");
-    
-    setTextfieldData();
-
-    controller.getData = function (key) {
-        const messagePrefix = "\n\nCannot get data:\n";
-        let message = messagePrefix;
-
-        if(key === undefined) {
-            return $$props;
-        }
-
-        if($$props[key] === undefined || key === "controller") {
-            message += "\nProperty '" + key + "' is not recognized";
-            message += "\n\n";
-
-            throw new Error(message);
-        }
-
-        return $$props[key];
-    };
-
-    controller.setData = function (
-        key,
-        val
-    ) {
-        const messagePrefix = "\n\nCannot set data:\n";
-        let message = messagePrefix;
-
-        if($$props[key] === undefined || key === "controller") {
-            message += "\nProperty '" + key + "' is not recognized";
-            message += "\n\n";
-
-            throw new Error(message);
-        }
-
-        textfield.setData(
-            key,
-            val
-        );
-
-        switch(key) {
-            case "state":
-                textfield.querySelectorAll(".swg-button")
-                .forEach(function(element) {
-                    element.setData(
-                        "state",
-                        (state === "default") ? "primary" : state
-                    );
-                });
-            break;
-            case "iconPosition":
-                setIconFlag();
-            break;
-        }
-    };
 
     button.delegateFor(
         "",
@@ -177,6 +78,7 @@ onMount(function(e) {
 >
     <SWGTextfield
         bind:controller={textfield}
+        bind:value
 
         bind:layout
         bind:state
@@ -184,7 +86,6 @@ onMount(function(e) {
         bind:readonly
         bind:label
         bind:maxLength
-        bind:value
         bind:placeholder
         bind:hint
     >
