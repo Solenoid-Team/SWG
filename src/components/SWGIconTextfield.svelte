@@ -195,6 +195,10 @@ onMount(function(e) {
         bind:maxLength
         bind:placeholder
         bind:hint
+
+        on:swg-input
+        on:swg-change
+        on:swg-focuschange
     >
         <div class="swg-icon-textfield-content-before" slot="content-before">
             {#if iconPosition === "left"}

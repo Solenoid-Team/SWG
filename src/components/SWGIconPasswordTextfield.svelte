@@ -27,10 +27,8 @@ export let hint         =        "";
 export let controller   =      null;
 export let value        =        "";
 
-let textfield          =      null;
-let input              =      null;
-let buttons            =      null;
-let button             =      null;
+let iconTextfield       =      null;
+let input               =      null;
 
 let layout = "BTA";
 
@@ -115,50 +113,43 @@ let callbacks = {
 onMount(function(e) {
     setIconFlag();
 
-    buttons   = textfield.querySelectorAll(".swg-button");
-    button    = buttons[1];
-    input     = textfield.querySelector("input");
+    input = iconTextfield.querySelector("input");
 
     input.type = "password";
 
     controller.getData = function (key) {
-        let messagePrefix = "\n\nCannot get data:\n\n";
+        const messagePrefix = "\n\nCannot get data:\n";
         let message = messagePrefix;
 
+        let properties = {
+            "state"       : state,
+            "disabled"    : disabled,
+            "readonly"    : readonly,
+            "label"       : label,
+            "maxLength"   : maxLength,
+            "placeholder" : placeholder,
+            "hint"        : hint,
+
+            "value"       : value
+        };
+
+        if(key === undefined) {
+            return properties;
+        }
+
         switch(key) {
-            case "layout":
-                return layout;
-            break;
             case "state":
-                return state;
-            break;
             case "disabled":
-                return disabled;
-            break;
-            case "readonly":
-                return readonly;
-            break;
+            case "readony":
             case "label":
-                return label;
-            break;
             case "maxLength":
-                return maxLength;
-            break;
-            case "value":
-                return value;
-            break;
             case "placeholder":
-                return placeholder;
-            break;
             case "hint":
-                return hint;
-            break;
-            case "iconPosition":
-                return iconPosition;
+            case "value":
+                return properties[key];
             break;
             default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
+                message += "\nProperty '" + key + "' is not recognized";
                 message += "\n\n";
 
                 throw new Error(message);
@@ -169,86 +160,61 @@ onMount(function(e) {
         key,
         val
     ) {
-        let messagePrefix = "\n\nCannot set data:\n\n";
+        const messagePrefix = "\n\nCannot set data:\n";
         let message = messagePrefix;
 
         switch(key) {
-            case "layout":
-                layout = val;
-
-                textfield.setData(
-                    "layout",
-                    layout
-                );
-            break;
             case "state":
                 state = val;
-                
-                textfield.setData(
-                    "state",
-                    state
-                );
 
-                button.setData(
-                    "state",
-                    (state === "default") ? "primary" : state
-                );
+                let btnState = state;
+
+                if(state === "default") {
+                    btnState = "primary";
+                }
+                
+                iconTextfield.querySelectorAll(".swg-button")
+                .forEach(function(element) {
+                    element.setData(
+                        "state",
+                        btnState
+                    );
+                });
             break;
             case "disabled":
                 disabled = val;
-
-                textfield.setData(
-                    "disabled",
-                    disabled
-                );
             break;
             case "readonly":
                 readonly = val;
-
-                textfield.setData(
-                    "readonly",
-                    readonly
-                );
+            break;
+            case "label":
+                label = val;
             break;
             case "maxLength":
                 maxLength = val;
-
-                textfield.setData(
-                    "maxLength",
-                    maxLength
-                );
             break;
-            case "value":
-                value = val;
-
-                textfield.setData(
-                    "value",
-                    value
-                );
+            case "placeholder":
+                placeholder = val;
             break;
             case "hint":
                 hint = val;
-
-                textfield.setData(
-                    "hint",
-                    hint
-                );
             break;
-            case "iconPosition":
-                iconPosition = val;
+            case "value":
+                if(val > maxLength) {
+                    val = maxLength;
+                }
 
-                setIconFlag();
+                value = val;
             break;
             default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
+                message += "\nProperty '" + key + "' is not recognized";
                 message += "\n\n";
 
                 throw new Error(message);
         }
     };
 
-    textfield.delegateFor(
+    /*iconTextfield.delegateFor(
         ".swg-button",
         "swg-focuschange",
         function(e) {
@@ -265,7 +231,7 @@ onMount(function(e) {
         function(e) {
             e.originalEvent.stopPropagation();
         }
-    );
+    );*/
 });
 
 </script>
@@ -276,7 +242,7 @@ onMount(function(e) {
     bind:this={controller}
 >
     <SWGIconTextfield
-        bind:controller={textfield}
+        bind:controller={iconTextfield}
         bind:value
 
         bind:layout

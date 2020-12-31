@@ -113,6 +113,35 @@ onMount(function(e) {
 			}
 		}
 	);
+	
+	// SWG-Password-Textfield
+
+	document.body.delegateFor(
+		".fieldset[context='swg-password-textfield'] .swg-password-textfield",
+		"swg-change",
+		function(e) {
+			console.debug("\n'swg-change' on SWG-Password-Textfield");
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-password-textfield'] .swg-password-textfield",
+		"swg-focuschange",
+		function(e) {
+			console.debug("\n'swg-focuschange' on SWG-Password-Textfield");
+			console.debug(e.info.data);
+
+			if(!e.info.data.focus) {
+				let state
+				=
+				(e.info.data.value.length === 0 ? "danger" : "default")
+				;
+
+				e.source.setData("state",state);
+			}
+		}
+	);
 });
 
 </script>
@@ -230,7 +259,7 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 	
-	<fieldset class="fieldset" context="swg-icon-password-textfield">
+	<!--<fieldset class="fieldset" context="swg-icon-password-textfield">
 		<legend>
 			SWG-Icon-Password-Textfield
 		</legend>
@@ -239,7 +268,7 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 
-	<!--<fieldset class="fieldset" context="swg-password-textfield">
+	<fieldset class="fieldset" context="swg-password-textfield">
 		<legend>
 			SWG-Password-Textfield
 		</legend>

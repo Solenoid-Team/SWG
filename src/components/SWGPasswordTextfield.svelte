@@ -18,7 +18,7 @@ export let disabled     =     false;
 export let readonly     =     false;
 
 export let label        =        "";
-export let maxLength    = +Infinity;
+export let maxLength    =      null;
 export let value        =        "";
 export let placeholder  =        "";
 export let hint         =        "";
