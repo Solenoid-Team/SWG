@@ -15,20 +15,10 @@ export let type         = "container";
 export let disabled     =       false;
 export let state        =        null;
 export let values       =          [];
-
-export let value        =        null;
+export let valueIndex   =          -1;
 
 export let controller   =        null;
-
-let valueIndex          =           0;
-
-$: {
-    if(valueIndex >= 0 && valueIndex <= (values.length - 1)) {
-        value = values[valueIndex];
-    } else {
-        value = null;
-    }
-}
+export let value        =        null;
 
 let dispatchEvent = function (
     eventType,
@@ -53,6 +43,20 @@ let callbacks = {
             return;
         }
 
+        if(values.length > 0) {
+            if(valueIndex === (values.length - 1)) {
+                valueIndex = -1;
+            }
+
+            valueIndex++;
+        }
+
+        if(valueIndex >= 0 && valueIndex <= (values.length - 1)) {
+            value = values[valueIndex];
+        } else {
+            value = value;
+        }
+        
         let detail = {
             "controller": controller,
             "data": {
@@ -68,12 +72,6 @@ let callbacks = {
         if(values.length === 0) {
             return;
         }
-
-        if(valueIndex === (values.length - 1)) {
-            valueIndex = -1;
-        }
-
-        valueIndex++;
 
         dispatchEvent(
             "swg-change",
@@ -223,42 +221,7 @@ let callbacks = {
 };
 
 onMount(function(e) {
-    controller.getData = function (key) {
-        const messagePrefix = "\n\nCannot get data:\n";
-        let message = messagePrefix;
-
-        if(key === undefined) {
-            return $$props;
-        }
-
-        if($$props[key] === undefined || key === "controller") {
-            message += "\nProperty '" + key + "' is not recognized";
-            message += "\n\n";
-
-            throw new Error(message);
-        }
-
-        return $$props[key];
-    };
-
-    controller.setData = function (
-        key,
-        val
-    ) {
-        const messagePrefix = "\n\nCannot set data:\n";
-        let message = messagePrefix;
-
-        if($$props[key] === undefined || key === "controller") {
-            message += "\nProperty '" + key + "' is not recognized";
-            message += "\n\n";
-
-            throw new Error(message);
-        }
-
-        $$props[key] = val;
-
-        $$props = $$props;
-    };
+    
 });
 
 </script>
