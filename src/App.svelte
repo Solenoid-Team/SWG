@@ -14,7 +14,16 @@ import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
 install();
 
 onMount(function(e) {
-	
+	document.body.delegateFor(
+		".fieldset[context='swg-button'] .swg-button",
+		"swg-change",
+		function(e) {
+			console.debug("\n'swg-change' on SWG-Button");
+			console.debug(e.info.data);
+
+			e.info.controller.innerHTML = e.info.controller.getData("value");
+		}
+	);
 });
 
 </script>

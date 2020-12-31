@@ -221,7 +221,74 @@ let callbacks = {
 };
 
 onMount(function(e) {
-    
+    controller.getData = function (key) {
+        const messagePrefix = "\n\nCannot get data:\n";
+        let message = messagePrefix;
+
+        let properties = {
+            "type"      : type,
+            "disabled"  : disabled,
+            "state"     : state,
+            "values"    : values,
+            "valueIndex": valueIndex,
+
+            "value"     : value
+        };
+
+        if(key === undefined) {
+            return properties;
+        }
+
+        switch(key) {
+            case "type":
+            case "disabled":
+            case "state":
+            case "values":
+            case "valueIndex":
+            case "value":
+                return properties[key];
+            break;
+            default:
+                message += "\nProperty '" + key + "' is not recognized";
+                message += "\n\n";
+
+                throw new Error(message);
+        }
+    };
+
+    controller.setData = function (
+        key,
+        val
+    ) {
+        const messagePrefix = "\n\nCannot set data:\n";
+        let message = messagePrefix;
+
+        switch(key) {
+            case "type":
+                type = val;
+            break;
+            case "disabled":
+                disabled = val;
+            break;
+            case "state":
+                state = val;
+            break;
+            case "values":
+                values = val;
+            break;
+            case "valueIndex":
+                valueIndex = val;
+            break;
+            case "value":
+                value = val;
+            break;
+            default:
+                message += "\nProperty '" + key + "' is not recognized";
+                message += "\n\n";
+
+                throw new Error(message);
+        }
+    };
 });
 
 </script>
