@@ -135,8 +135,14 @@ onMount(function(e) {
             break;
             case "iconPosition":
                 iconPosition = val;
+
+                setIconFlag();
             break;
             case "value":
+                if(val > maxLength) {
+                    val = maxLength;
+                }
+
                 value = val;
             break;
             default:
