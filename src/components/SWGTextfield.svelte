@@ -18,12 +18,12 @@ export let disabled           =     false;
 export let readonly           =     false;
 
 export let label              =        "";
-export let maxLength          = +Infinity;
-export let value              =        "";
+export let maxLength          =      null;
 export let placeholder        =        "";
 export let hint               =        "";
 
 export let controller         =      null;
+export let value              =        "";
 
 let input                     =      null;
 
@@ -55,11 +55,11 @@ let callbacks = {
             return;
         }
 
-        if(value.length > maxLength) {
+        /*if(value.length > maxLength) {
             value = valueBefore;
 
             return;
-        }
+        }*/
 
         let detail = {
             "controller": controller,
@@ -119,51 +119,6 @@ let callbacks = {
 
 onMount(function(e) {
     valueBefore = value;
-
-    controller.getData = function (key) {
-        const messagePrefix = "\n\nCannot get data:\n";
-        let message = messagePrefix;
-
-        if(key === undefined) {
-            return $$props;
-        }
-
-        if($$props[key] === undefined || key === "controller") {
-            message += "\nProperty '" + key + "' is not recognized";
-            message += "\n\n";
-
-            throw new Error(message);
-        }
-
-        return $$props[key];
-    };
-
-    controller.setData = function (
-        key,
-        val
-    ) {
-        const messagePrefix = "\n\nCannot set data:\n";
-        let message = messagePrefix;
-
-        if($$props[key] === undefined || key === "controller") {
-            message += "\nProperty '" + key + "' is not recognized";
-            message += "\n\n";
-
-            throw new Error(message);
-        }
-
-        switch(key) {
-            case "value":
-                if(value.length > maxLength) {
-                    return;
-                }
-            break;
-        }
-
-        $$props[key] = val;
-
-        $$props = $$props;
-    };
 });
 
 </script>
@@ -188,6 +143,8 @@ onMount(function(e) {
                 bind:value
 
                 {placeholder}
+
+                maxlength={maxLength}
 
                 on:input={callbacks["input"]}
                 on:blur={callbacks["blur"]}

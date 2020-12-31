@@ -340,7 +340,7 @@ console.debug(iconTextfield.getData());
 		</div>
 	</fieldset>
 	
-	<fieldset class="fieldset" context="swg-icon-textfield">
+	<!--<fieldset class="fieldset" context="swg-icon-textfield">
 		<legend>
 			SWG-Icon-Textfield
 		</legend>
@@ -411,7 +411,7 @@ console.debug(iconTextfield.getData());
 				</div>
 			</SWGNumericTextfield>
 		</div>
-	</fieldset>
+	</fieldset>-->
 </main>
 
 <style>
