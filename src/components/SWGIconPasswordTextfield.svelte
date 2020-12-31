@@ -10,7 +10,7 @@
 
 import { onMount } from 'svelte';
 
-import SWGTextfield from './SWGTextfield.svelte';
+import SWGIconTextfield from './SWGIconTextfield.svelte';
 import SWGTextfieldLabel from './SWGTextfieldLabel.svelte';
 import SWGButton from './SWGButton.svelte';
 
@@ -20,12 +20,13 @@ export let disabled     =     false;
 export let readonly     =     false;
 
 export let label        =        "";
-export let maxLength    = +Infinity;
-export let value        =        "";
+export let maxLength    =      null;
 export let placeholder  =        "";
 export let hint         =        "";
 
-let controller         =      null;
+export let controller   =      null;
+export let value        =        "";
+
 let textfield          =      null;
 let input              =      null;
 let buttons            =      null;
@@ -114,14 +115,11 @@ let callbacks = {
 onMount(function(e) {
     setIconFlag();
 
-    textfield = controller.querySelector(".swg-textfield");
     buttons   = textfield.querySelectorAll(".swg-button");
     button    = buttons[1];
     input     = textfield.querySelector("input");
 
     input.type = "password";
-    
-    setTextfieldData();
 
     controller.getData = function (key) {
         let messagePrefix = "\n\nCannot get data:\n\n";
@@ -277,37 +275,38 @@ onMount(function(e) {
 <div class="swg swg-icon-password-textfield"
     bind:this={controller}
 >
-    <SWGTextfield
+    <SWGIconTextfield
+        bind:controller={textfield}
+        bind:value
+
         bind:layout
         bind:state
         bind:disabled
         bind:readonly
         bind:label
         bind:maxLength
-        bind:value
         bind:placeholder
         bind:hint
+        
+        iconPosition="left"
     >
-        <div class="swg-icon-password-textfield-content-before" slot="content-before">
-            <div class="icon-box">
-                <SWGTextfieldLabel>
-                    <i class="fas fa-lock"></i>
-                </SWGTextfieldLabel>
-            </div>
+        <div class="swg-icon-password-textfield-content-before" slot="left">
+            <i class="fas fa-lock"></i>
         </div>
-        <div class="swg-icon-password-textfield-content-after" slot="content-after">
+        <div class="swg-icon-password-textfield-content-after" slot="right">
             <div class="icon-box">
                 <SWGButton
                     type="text"
                     state="primary"
                     values={["text","password"]}
+
                     on:swg-change={callbacks["swg-change"]}
                 >
                     <i class="fas fa-eye"></i>
                 </SWGButton>
             </div>
         </div>
-    </SWGTextfield>
+    </SWGIconTextfield>
 </div>
 
 <style>
