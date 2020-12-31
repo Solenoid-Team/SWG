@@ -73,6 +73,15 @@ onMount(function(e) {
 		function(e) {
 			console.debug("\n'swg-focuschange' on SWG-Icon-Textfield");
 			console.debug(e.info.data);
+
+			if(!e.info.data.focus) {
+				let state
+				=
+				(e.info.data.value.length === 0 ? "danger" : "default")
+				;
+
+				e.source.setData("state",state);
+			}
 		}
 	);
 });
