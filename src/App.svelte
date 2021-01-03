@@ -13,6 +13,8 @@ import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
 import SWGCheckbox from './components/SWGCheckbox.svelte';
 import SWGRadio from './components/SWGRadio.svelte';
 import SWGRadioGroup from './components/SWGRadioGroup.svelte';
+import SWGSelectBox from './components/SWGSelectBox.svelte';
+import SWGSelectItem from './components/SWGSelectItem.svelte';
 
 install();
 
@@ -436,27 +438,59 @@ onMount(function(e) {
 		</legend>
 		<div class="content" style="width: 400px;">
 			<SWGRadioGroup>
-				<SWGRadio value="1">
+				<SWGRadio value="Item 1">
 					<div slot="label">
 						Item 1
 					</div>
 				</SWGRadio>
-				<SWGRadio value="2">
+				<SWGRadio value="Item 2">
 					<div slot="label">
 						Item 2
 					</div>
 				</SWGRadio>
-				<SWGRadio value="3">
+				<SWGRadio value="Item 3">
 					<div slot="label">
 						Item 3
 					</div>
 				</SWGRadio>
-				<SWGRadio value="4">
+				<SWGRadio value="Item 4">
 					<div slot="label">
 						Item 4
 					</div>
 				</SWGRadio>
 			</SWGRadioGroup>
+		</div>
+	</fieldset>
+
+	<fieldset class="fieldset" context="swg-select-box">
+		<legend>
+			SWG-Select-Box
+		</legend>
+		<div class="content" style="width: 400px;">
+			<SWGSelectBox
+				placeholder="Select an item"
+			>
+				<SWGSelectItem value="Item 1">
+					<div slot="label">
+						Item 1
+					</div>
+				</SWGSelectItem>
+				<SWGSelectItem value="Item 2">
+					<div slot="label">
+						Item 2
+					</div>
+				</SWGSelectItem>
+				<SWGSelectItem value="Item 3">
+					<div slot="label">
+						Item 3
+					</div>
+				</SWGSelectItem>
+				<SWGSelectItem value="Item 4">
+					<div slot="label">
+						Item 4
+					</div>
+				</SWGSelectItem>
+			</SWGSelectBox>
 		</div>
 	</fieldset>
 </main>
@@ -492,7 +526,8 @@ fieldset > legend {
 }
 
 .fieldset[context='swg-checkbox'] .content,
-.fieldset[context='swg-radio-group'] .content {
+.fieldset[context='swg-radio-group'] .content,
+.fieldset[context='swg-select-box'] .content {
 	display: flex;
 	flex-direction: column;
 	justify-content: left;
