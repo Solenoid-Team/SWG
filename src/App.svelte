@@ -10,6 +10,7 @@ import SWGIconTextfield from './components/SWGIconTextfield.svelte';
 import SWGIconPasswordTextfield from './components/SWGIconPasswordTextfield.svelte';
 import SWGPasswordTextfield from './components/SWGPasswordTextfield.svelte';
 import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
+import SWGCheckbox from './components/SWGCheckbox.svelte';
 
 install();
 
@@ -356,6 +357,22 @@ onMount(function(e) {
 					CUSTOM
 				</div>
 			</SWGNumericTextfield>
+		</div>
+	</fieldset>
+
+	<fieldset class="fieldset" context="swg-checkbox">
+		<legend>
+			SWG-Checkbox
+		</legend>
+		<div class="content" style="width: 400px;">
+			<SWGCheckbox>
+				<div slot="body">
+					BODY
+				</div>
+				<div slot="label">
+					DISABLED = FALSE | CHECKED = FALSE
+				</div>
+			</SWGCheckbox>
 		</div>
 	</fieldset>
 </main>

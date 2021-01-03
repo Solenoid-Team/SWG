@@ -1,52 +1,158 @@
 <script>
 
-import { onMount } from "svelte";
+import { onMount } from 'svelte';
 
-export let object;
+import { createEventDispatcher } from 'svelte';
 
-let controller = null;
-let input = null;
+const dispatch = createEventDispatcher();
+
+export let disabled   = false;
+export let checked    = false;
+
+export let label      =    "";
+
+export let controller = null;
+export let value      =   "";
+
+let input             = null;
+
+let dispatchEvent = function (
+    eventType,
+    detail
+) {
+    dispatch(
+        eventType,
+        detail
+    );
+
+    controller.triggerEvent(
+        eventType,
+        detail
+    );
+};
+
+let callbacks = {
+    "change": function (e) {
+        if(disabled) {
+            return;
+        }
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value"  : value,
+                "checked": checked
+            }
+        };
+
+        dispatchEvent(
+            "swg-change",
+            detail
+        );
+    }
+};
+
+$: if(input !== null) input.disabled = disabled;
 
 onMount(function(e) {
-    input.checked = false;
+
 });
 
 </script>
 
-<div class="swg swg-checkbox" bind:this={controller} {object}>
-    <label>
-        <slot name="label"></slot>
-        <input type="checkbox" bind:this={input}>
-        <div class="swg-checkbox-emulator">
-            ✓
+<label class="checkbox"
+    bind:this={controller}
+>
+    <div class="checkbox-body">
+        <slot name="body"></slot>
+    </div>
+    <input type="checkbox"
+        bind:this={input}
+
+        bind:checked
+        bind:value
+
+        on:change={callbacks["change"]}
+    >
+    <div class="checkbox-footer">
+        <div class="checkbox-emulator-box">
+            <div class="checkbox-emulator">
+                <slot name="emulator">
+                    <i class="fas fa-check"></i>
+                </slot>
+            </div>
         </div>
-    </label>
-</div>
+        <div class="checkbox-label">
+            <slot name="label">
+                {label}
+            </slot>
+        </div>
+    </div>
+</label>
 
 <style>
 
-.swg {
-
+.checkbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
-.swg-checkbox {
-
+.checkbox,
+.checkbox * {
+    user-select: none;
 }
 
-.swg-checkbox > label {
-
+.checkbox-body {
+    
 }
 
-.swg-checkbox > label > input {
+input {
     display: none;
 }
 
-.swg-checkbox > label > input:checked + .swg-checkbox-emulator {
+.checkbox-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox-emulator-box {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.checkbox-emulator {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+input:checked + .checkbox-footer .checkbox-emulator-box {
+    background-color: #00bd9c;
+}
+
+input:not(:checked) + .checkbox-footer .checkbox-emulator-box {
+    background-color: #e7e7e7;
+}
+
+input:checked + .checkbox-footer .checkbox-emulator {
     visibility: visible;
 }
 
-.swg-checkbox > label > input:not(:checked) + .swg-checkbox-emulator {
+input:not(:checked) + .checkbox-footer .checkbox-emulator {
     visibility: hidden;
+}
+
+.checkbox-label {
+
 }
 
 </style>
