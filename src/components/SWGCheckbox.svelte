@@ -60,6 +60,40 @@ let callbacks = {
         if(e.key === "Enter") {
             controller.click();
         }
+    },
+    "blur": function (e) {
+        //console.debug(e);
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value"  : value,
+                "checked": checked,
+                "focus"  : false
+            }
+        };
+
+        dispatchEvent(
+            "swg-focuschange",
+            detail
+        );
+    },
+    "focus": function (e) {
+        //console.debug(e);
+
+        let detail = {
+            "controller": controller,
+            "data": {
+                "value"  : value,
+                "checked": checked,
+                "focus"  : true
+            }
+        };
+
+        dispatchEvent(
+            "swg-focuschange",
+            detail
+        );
     }
 };
 
@@ -136,6 +170,8 @@ onMount(function(e) {
     {disabled}
 
     on:keydown={callbacks["keydown"]}
+    on:blur={callbacks["blur"]}
+    on:focus={callbacks["focus"]}
 >
     <div class="swg-checkbox-body">
         <slot name="body"></slot>

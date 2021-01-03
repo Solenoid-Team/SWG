@@ -205,6 +205,26 @@ onMount(function(e) {
 			console.debug(e.info.data);
 		}
 	);
+	
+	// SWG-Checkbox
+
+	document.body.delegateFor(
+		".fieldset[context='swg-checkbox'] .swg-checkbox",
+		"swg-change",
+		function(e) {
+			console.debug("\n'swg-change' on SWG-Checkbox");
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-checkbox'] .swg-checkbox",
+		"swg-focuschange",
+		function(e) {
+			console.debug("\n'swg-focuschange' on SWG-Checkbox");
+			console.debug(e.info.data);
+		}
+	);
 });
 
 </script>
@@ -366,11 +386,23 @@ onMount(function(e) {
 		</legend>
 		<div class="content" style="width: 400px;">
 			<SWGCheckbox>
-				<div slot="body">
-					BODY
-				</div>
 				<div slot="label">
 					DISABLED = FALSE | CHECKED = FALSE
+				</div>
+			</SWGCheckbox>
+			<SWGCheckbox checked={true}>
+				<div slot="label">
+					DISABLED = FALSE | CHECKED = TRUE
+				</div>
+			</SWGCheckbox>
+			<SWGCheckbox disabled={true}>
+				<div slot="label">
+					DISABLED = TRUE | CHECKED = FALSE
+				</div>
+			</SWGCheckbox>
+			<SWGCheckbox disabled={true} checked={true}>
+				<div slot="label">
+					DISABLED = TRUE | CHECKED = TRUE
 				</div>
 			</SWGCheckbox>
 		</div>
@@ -405,6 +437,13 @@ fieldset > legend {
 	padding: 10px;
 	font-weight: 600;
 	font-size: 16px;
+}
+
+.fieldset[context='swg-checkbox'] .content {
+	display: flex;
+	flex-direction: column;
+	justify-content: left;
+	align-items: baseline;
 }
 
 </style>
