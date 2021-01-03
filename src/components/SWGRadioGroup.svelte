@@ -17,7 +17,7 @@ export let checked    = false;
 export let controller = null;
 export let value      =   "";
 
-let input             = null;
+let checkbox          = null;
 
 let dispatchEvent = function (
     eventType,
@@ -34,74 +34,6 @@ let dispatchEvent = function (
     );
 };
 
-let callbacks = {
-    "change": function (e) {
-        if(disabled) {
-            return;
-        }
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value"  : value,
-                "checked": checked
-            }
-        };
-
-        dispatchEvent(
-            "swg-change",
-            detail
-        );
-    },
-    "keydown": function (e) {
-        //console.debug(e);
-
-        if(disabled) {
-            return;
-        }
-
-        if(e.key === "Enter") {
-            controller.click();
-        }
-    },
-    "blur": function (e) {
-        //console.debug(e);
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value"  : value,
-                "checked": checked,
-                "focus"  : false
-            }
-        };
-
-        dispatchEvent(
-            "swg-focuschange",
-            detail
-        );
-    },
-    "focus": function (e) {
-        //console.debug(e);
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value"  : value,
-                "checked": checked,
-                "focus"  : true
-            }
-        };
-
-        dispatchEvent(
-            "swg-focuschange",
-            detail
-        );
-    }
-};
-
-$: if(input !== null) input.disabled = disabled;
-
 onMount(function(e) {
     controller.getData = function (key) {
         const messagePrefix = "\n\nCannot get data:\n";
@@ -110,6 +42,7 @@ onMount(function(e) {
         let properties = {
             "disabled"  : disabled,
             "checked"   : checked,
+            "label"     : label,
 
             "value"     : value
         };
@@ -121,6 +54,7 @@ onMount(function(e) {
         switch(key) {
             case "disabled":
             case "checked":
+            case "label":
             case "value":
                 return properties[key];
             break;
@@ -146,6 +80,9 @@ onMount(function(e) {
             case "checked":
                 checked = val;
             break;
+            case "label":
+                label = val;
+            break;
             case "value":
                 value = val;
             break;
@@ -162,39 +99,27 @@ onMount(function(e) {
 
 <svelte:options accessors={true} />
 
-<label class="swg swg-checkbox" role=button tabindex=0
+<div class="swg swg-radio"
     bind:this={controller}
-
-    {disabled}
-
-    on:keydown={callbacks["keydown"]}
-    on:blur={callbacks["blur"]}
-    on:focus={callbacks["focus"]}
 >
-    <div class="swg-checkbox-body">
-        <slot name="body"></slot>
-    </div>
-    <input type="checkbox"
-        bind:this={input}
-
-        bind:checked
+    <SWGCheckbox
+        bind:controller={checkbox}
         bind:value
 
-        on:change={callbacks["change"]}
+        bind:disabled
+        bind:checked
+
+        on:swg-change
+        on:swg-focuschange
     >
-    <div class="swg-checkbox-footer">
-        <div class="swg-checkbox-emulator-box">
-            <div class="swg-checkbox-emulator">
-                <slot name="emulator">
-                    <i class="fas fa-check"></i>
-                </slot>
-            </div>
+        <div class="swg-radio-body" slot="body">
+            <slot name="body"></slot>
         </div>
-        <div class="swg-checkbox-label">
+        <div class="swg-radio-label" slot="label">
             <slot name="label"></slot>
         </div>
-    </div>
-</label>
+    </SWGCheckbox>
+</div>
 
 <style>
 

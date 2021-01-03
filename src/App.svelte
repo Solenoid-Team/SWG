@@ -11,6 +11,7 @@ import SWGIconPasswordTextfield from './components/SWGIconPasswordTextfield.svel
 import SWGPasswordTextfield from './components/SWGPasswordTextfield.svelte';
 import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
 import SWGCheckbox from './components/SWGCheckbox.svelte';
+import SWGRadio from './components/SWGRadio.svelte';
 
 install();
 
@@ -225,6 +226,26 @@ onMount(function(e) {
 			console.debug(e.info.data);
 		}
 	);
+	
+	// SWG-Radio-Group
+
+	document.body.delegateFor(
+		".fieldset[context='swg-radio-group'] .swg-radio-group",
+		"swg-change",
+		function(e) {
+			console.debug("\n'swg-change' on SWG-Radio-Group");
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-radio-group'] .swg-radio-group",
+		"swg-focuschange",
+		function(e) {
+			console.debug("\n'swg-focuschange' on SWG-Radio-Group");
+			console.debug(e.info.data);
+		}
+	);
 });
 
 </script>
@@ -407,6 +428,36 @@ onMount(function(e) {
 			</SWGCheckbox>
 		</div>
 	</fieldset>
+
+	<fieldset class="fieldset" context="swg-radio-group">
+		<legend>
+			SWG-Radio-Group
+		</legend>
+		<div class="content" style="width: 400px;">
+			<SWGRadioGroup>
+				<SWGRadio value="1">
+					<div slot="label">
+						Item 1
+					</div>
+				</SWGRadio>
+				<SWGRadio value="2">
+					<div slot="label">
+						Item 2
+					</div>
+				</SWGRadio>
+				<SWGRadio value="3">
+					<div slot="label">
+						Item 3
+					</div>
+				</SWGRadio>
+				<SWGRadio value="4">
+					<div slot="label">
+						Item 4
+					</div>
+				</SWGRadio>
+			</SWGRadioGroup>
+		</div>
+	</fieldset>
 </main>
 
 <style>
@@ -439,7 +490,8 @@ fieldset > legend {
 	font-size: 16px;
 }
 
-.fieldset[context='swg-checkbox'] .content {
+.fieldset[context='swg-checkbox'] .content,
+.fieldset[context='swg-radio-group'] .content {
 	display: flex;
 	flex-direction: column;
 	justify-content: left;
