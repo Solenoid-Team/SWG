@@ -413,7 +413,7 @@ onMount(function(e) {
         }
     );
 
-    /*textfield.delegateFor(
+    textfield.delegateFor(
         "",
         "swg-focuschange",
         function(e) {
@@ -436,7 +436,7 @@ onMount(function(e) {
                 );
             }
         }
-    );*/
+    );
 });
 
 </script>
