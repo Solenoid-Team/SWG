@@ -80,7 +80,21 @@ onMount(function(e) {
 				(e.info.data.value.length === 0 ? "danger" : "default")
 				;
 
-				e.source.setData("state",state);
+				e.source.setData(
+					"state",
+					state
+				);
+
+				let hint = "";
+
+				if(e.info.data.value.length === 0) {
+					hint = e.info.controller.getData("placeholder") + " is empty";
+				}
+
+				e.source.setData(
+					"hint",
+					hint
+				);
 			}
 		}
 	);
@@ -109,7 +123,21 @@ onMount(function(e) {
 				(e.info.data.value.length === 0 ? "danger" : "default")
 				;
 
-				e.source.setData("state",state);
+				e.source.setData(
+					"state",
+					state
+				);
+
+				let hint = "";
+
+				if(e.info.data.value.length === 0) {
+					hint = "Password is empty";
+				}
+
+				e.source.setData(
+					"hint",
+					hint
+				);
 			}
 		}
 	);
@@ -138,7 +166,21 @@ onMount(function(e) {
 				(e.info.data.value.length === 0 ? "danger" : "default")
 				;
 
-				e.source.setData("state",state);
+				e.source.setData(
+					"state",
+					state
+				);
+
+				let hint = "";
+
+				if(e.info.data.value.length === 0) {
+					hint = "Password is empty";
+				}
+
+				e.source.setData(
+					"hint",
+					hint
+				);
 			}
 		}
 	);

@@ -174,6 +174,20 @@ onMount(function(e) {
             break;
             case "state":
                 state = val;
+
+                let btnState = state;
+
+                if(state === "default") {
+                    btnState = "primary";
+                }
+                
+                controller.querySelectorAll(".swg-button")
+                .forEach(function(element) {
+                    element.setData(
+                        "state",
+                        btnState
+                    );
+                });
             break;
             case "disabled":
                 disabled = val;
