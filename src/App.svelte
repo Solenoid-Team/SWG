@@ -12,6 +12,7 @@ import SWGPasswordTextfield from './components/SWGPasswordTextfield.svelte';
 import SWGNumericTextfield from './components/SWGNumericTextfield.svelte';
 import SWGCheckbox from './components/SWGCheckbox.svelte';
 import SWGRadio from './components/SWGRadio.svelte';
+import SWGRadioGroup from './components/SWGRadioGroup.svelte';
 
 install();
 

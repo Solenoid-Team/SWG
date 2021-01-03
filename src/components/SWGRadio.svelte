@@ -45,7 +45,6 @@ onMount(function(e) {
         let properties = {
             "disabled"  : disabled,
             "checked"   : checked,
-            "label"     : label,
 
             "value"     : value
         };
@@ -57,7 +56,6 @@ onMount(function(e) {
         switch(key) {
             case "disabled":
             case "checked":
-            case "label":
             case "value":
                 return properties[key];
             break;
@@ -82,9 +80,6 @@ onMount(function(e) {
             break;
             case "checked":
                 checked = val;
-            break;
-            case "label":
-                label = val;
             break;
             case "value":
                 value = val;
@@ -121,6 +116,9 @@ onMount(function(e) {
         <div class="swg-radio-label" slot="label">
             <slot name="label"></slot>
         </div>
+        <div class="swg-radio-emulator" slot="emulator">
+            <i class="fas fa-circle"></i>
+        </div>
     </SWGCheckbox>
 </div>
 
@@ -136,6 +134,21 @@ onMount(function(e) {
     padding: 0;
     outline: none;
     box-sizing: border-box;
+}
+
+.swg-radio-emulator {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.swg-radio :global(.swg-checkbox-emulator-box) {
+    border-radius: 100%;
+}
+
+.swg-radio :global(i) {
+    font-size: 10px;
 }
 
 </style>

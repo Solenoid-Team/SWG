@@ -249,6 +249,10 @@ input {
 }
 
 .swg-checkbox-emulator {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     font-size: 16px;
     color: #ffffff;
 }
