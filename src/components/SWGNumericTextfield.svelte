@@ -24,7 +24,6 @@ export let disabled    =     false;
 export let readonly    =     false;
 
 export let label       =        "";
-export let value       =         0;
 export let hint        =        "";
 
 export let minValue    = -Infinity;
@@ -32,13 +31,15 @@ export let maxValue    = +Infinity;
 
 export let step        =         1;
 
-let layout             =      null;
+export let controller  =      null;
+export let value       =         0;
 
-let controller         =      null;
 let textfield          =      null;
 let input              =      null;
 
 let valueBefore        =      null;
+
+let layout             =      null;
 
 let normalizeValue = function (val) {
     val = parseFloat(val);
@@ -167,43 +168,6 @@ let setIconFlag = function () {
     );
 };
 
-let setTextfieldData = function () {
-    textfield.setData(
-        "layout",
-        layout
-    );
-
-    textfield.setData(
-        "state",
-        state
-    );
-    
-    textfield.setData(
-        "disabled",
-        disabled
-    );
-    
-    textfield.setData(
-        "readonly",
-        readonly
-    );
-
-    textfield.setData(
-        "label",
-        label
-    );
-
-    textfield.setData(
-        "value",
-        value
-    );
-
-    textfield.setData(
-        "hint",
-        hint
-    );
-};
-
 let callbacks = {
     "input": function (e) {
         //console.debug(e);
@@ -297,132 +261,88 @@ let callbacks = {
 onMount(function(e) {
     setIconFlag();
 
-    textfield = controller.querySelector(".swg-textfield");
-    input     = textfield.querySelector("input");
-    
-    setTextfieldData();
+    input = textfield.querySelector("input");
 
     valueBefore = parseFloat(value);
 
     controller.getData = function (key) {
-        let messagePrefix = "\n\nCannot get data:\n\n";
+        const messagePrefix = "\n\nCannot get data:\n";
         let message = messagePrefix;
+
+        let properties = {
+            "custom"     : custom,
+            "controls"   : controls,
+            "state"      : state,
+            "disabled"   : disabled,
+            "readonly"   : readonly,
+            "label"      : label,
+            "hint"       : hint,
+            "minValue"   : minValue,
+            "maxValue"   : maxValue,
+            "step"       : step,
+
+            "value"     : value
+        };
+
+        if(key === undefined) {
+            return properties;
+        }
 
         switch(key) {
             case "custom":
-                return custom;
-            break;
             case "controls":
-                return controls;
-            break;
             case "state":
-                return state;
-            break;
             case "disabled":
-                return disabled;
-            break;
-            case "readonly":
-                return readonly;
-            break;
+            case "readony":
             case "label":
-                return label;
-            break;
-            case "value":
-                return input.value;
-            break;
             case "hint":
-                return hint;
-            break;
             case "minValue":
-                return minValue;
-            break;
             case "maxValue":
-                return maxValue;
-            break;
             case "step":
-                return step;
+            case "value":
+                return properties[key];
             break;
             default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
+                message += "\nProperty '" + key + "' is not recognized";
                 message += "\n\n";
 
                 throw new Error(message);
         }
-    }
+    };
 
     controller.setData = function (
         key,
         val
     ) {
-        let messagePrefix = "\n\nCannot set data:\n\n";
+        const messagePrefix = "\n\nCannot set data:\n";
         let message = messagePrefix;
 
         switch(key) {
             case "custom":
                 custom = val;
-
-                layout = getLayout();
-
-                textfield.setData(
-                    "layout",
-                    layout
-                );
             break;
             case "controls":
                 controls = val;
-
-                layout = getLayout();
-
-                textfield.setData(
-                    "layout",
-                    layout
-                );
             break;
             case "state":
                 state = val;
-                
+
                 textfield.setData(
                     "state",
                     state
                 );
-
-                button.setData(
-                    "state",
-                    (state === "default") ? "primary" : state
-                );
             break;
             case "disabled":
                 disabled = val;
-
-                textfield.setData(
-                    "disabled",
-                    disabled
-                );
             break;
             case "readonly":
                 readonly = val;
-
-                textfield.setData(
-                    "readonly",
-                    readonly
-                );
             break;
-            case "value":
-                value = val;
-
-                textfield.setData(
-                    "value",
-                    value
-                );
+            case "label":
+                label = val;
             break;
             case "hint":
                 hint = val;
-
-                textfield.setData(
-                    "hint",
-                    hint
-                );
             break;
             case "minValue":
                 minValue = val;
@@ -433,16 +353,18 @@ onMount(function(e) {
             case "step":
                 step = val;
             break;
+            case "value":
+                value = val;
+            break;
             default:
-                message += "\nArgument 'key':";
-                message += "\nValue is not recognized";
+                message += "\nProperty '" + key + "' is not recognized";
                 message += "\n\n";
 
                 throw new Error(message);
         }
-    }
+    };
 
-    /*controller.delegateFor(
+    controller.delegateFor(
         ".swg-button",
         [
             "swg-input",
@@ -452,7 +374,7 @@ onMount(function(e) {
         function(e) {
             e.originalEvent.stopPropagation();
         }
-    );*/
+    );
 
     input.delegateFor(
         "",
@@ -491,7 +413,7 @@ onMount(function(e) {
         }
     );
 
-    textfield.delegateFor(
+    /*textfield.delegateFor(
         "",
         "swg-focuschange",
         function(e) {
@@ -514,7 +436,7 @@ onMount(function(e) {
                 );
             }
         }
-    );
+    );*/
 });
 
 </script>
@@ -525,12 +447,14 @@ onMount(function(e) {
     bind:this={controller}
 >
     <SWGTextfield
+        bind:controller={textfield}
+        bind:value
+
         bind:layout
         bind:state
         bind:disabled
         bind:readonly
         bind:label
-        bind:value
         bind:hint
     >
         <div class="swg-numeric-textfield-content-before" slot="content-before">

@@ -184,6 +184,26 @@ onMount(function(e) {
 			}
 		}
 	);
+	
+	// SWG-Numeric-Textfield
+
+	document.body.delegateFor(
+		".fieldset[context='swg-numeric-textfield'] .swg-numeric-textfield",
+		"swg-change",
+		function(e) {
+			console.debug("\n'swg-change' on SWG-Numeric-Textfield");
+			console.debug(e.info.data);
+		}
+	);
+
+	document.body.delegateFor(
+		".fieldset[context='swg-numeric-textfield'] .swg-numeric-textfield",
+		"swg-focuschange",
+		function(e) {
+			console.debug("\n'swg-focuschange' on SWG-Numeric-Textfield");
+			console.debug(e.info.data);
+		}
+	);
 });
 
 </script>
@@ -319,7 +339,7 @@ onMount(function(e) {
 		</div>
 	</fieldset>
 
-	<!--<fieldset class="fieldset" context="swg-numeric-textfield">
+	<fieldset class="fieldset" context="swg-numeric-textfield">
 		<legend>
 			SWG-Numeric-Textfield
 		</legend>
@@ -337,7 +357,7 @@ onMount(function(e) {
 				</div>
 			</SWGNumericTextfield>
 		</div>
-	</fieldset>-->
+	</fieldset>
 </main>
 
 <style>
