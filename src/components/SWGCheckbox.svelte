@@ -49,6 +49,17 @@ let callbacks = {
             "swg-change",
             detail
         );
+    },
+    "keydown": function (e) {
+        //console.debug(e);
+
+        if(disabled) {
+            return;
+        }
+
+        if(e.key === "Enter") {
+            controller.click();
+        }
     }
 };
 
@@ -117,12 +128,16 @@ onMount(function(e) {
 
 </script>
 
-<label class="checkbox"
+<svelte:options accessors={true} />
+
+<label class="swg swg-checkbox" role=button tabindex=0
     bind:this={controller}
 
     {disabled}
+
+    on:keydown={callbacks["keydown"]}
 >
-    <div class="checkbox-body">
+    <div class="swg-checkbox-body">
         <slot name="body"></slot>
     </div>
     <input type="checkbox"
@@ -133,15 +148,15 @@ onMount(function(e) {
 
         on:change={callbacks["change"]}
     >
-    <div class="checkbox-footer">
-        <div class="checkbox-emulator-box">
-            <div class="checkbox-emulator">
+    <div class="swg-checkbox-footer">
+        <div class="swg-checkbox-emulator-box">
+            <div class="swg-checkbox-emulator">
                 <slot name="emulator">
                     <i class="fas fa-check"></i>
                 </slot>
             </div>
         </div>
-        <div class="checkbox-label">
+        <div class="swg-checkbox-label">
             <slot name="label">
                 {label}
             </slot>
@@ -151,7 +166,19 @@ onMount(function(e) {
 
 <style>
 
-.checkbox {
+.swg {
+    font-family: "Montserrat";
+}
+
+.swg,
+.swg * {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.swg-checkbox {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -159,12 +186,12 @@ onMount(function(e) {
     cursor: pointer;
 }
 
-.checkbox,
-.checkbox * {
+.swg-checkbox,
+.swg-checkbox * {
     user-select: none;
 }
 
-.checkbox-body {
+.swg-checkbox-body {
     
 }
 
@@ -172,14 +199,14 @@ input {
     display: none;
 }
 
-.checkbox-footer {
+.swg-checkbox-footer {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-.checkbox-emulator-box {
+.swg-checkbox-emulator-box {
     width: 28px;
     height: 28px;
     display: flex;
@@ -189,28 +216,34 @@ input {
     border-radius: 5px;
 }
 
-.checkbox-emulator {
+.swg-checkbox-emulator {
     font-size: 16px;
     color: #ffffff;
 }
 
-input:not(:checked) + .checkbox-footer .checkbox-emulator-box {
+input:not(:checked) + .swg-checkbox-footer .swg-checkbox-emulator-box {
     background-color: #e7e7e7;
 }
-
-input:not(:checked) + .checkbox-footer .checkbox-emulator {
+input:not(:checked) + .swg-checkbox-footer .swg-checkbox-emulator {
     visibility: hidden;
 }
+.swg-checkbox:focus input:not(:checked) + .swg-checkbox-footer .swg-checkbox-emulator-box {
+    border-color: #e1e1e1;
+    box-shadow: 0px 0px 4px 1px #cccccc;
+}
 
-input:checked + .checkbox-footer .checkbox-emulator-box {
+input:checked + .swg-checkbox-footer .swg-checkbox-emulator-box {
     background-color: #00bd9c;
 }
-
-input:checked + .checkbox-footer .checkbox-emulator {
+input:checked + .swg-checkbox-footer .swg-checkbox-emulator {
     visibility: visible;
 }
+.swg-checkbox:focus input:checked + .swg-checkbox-footer .swg-checkbox-emulator-box {
+    border-color: #00ad8f;
+    box-shadow: 0px 0px 4px 1px #00bd9c;
+}
 
-.checkbox-label {
+.swg-checkbox-label {
     margin-left: 10px;
     font-weight: 600;
     font-size: 14px;
