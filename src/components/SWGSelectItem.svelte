@@ -51,8 +51,6 @@ let callbacks = {
     }
 };
 
-$: console.debug(value + " " + checked);
-
 onMount(function(e) {
     controller.getData = function (key) {
         const messagePrefix = "\n\nCannot get data:\n";
