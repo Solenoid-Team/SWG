@@ -539,6 +539,19 @@ onMount(function(e) {
 			</SWGSelectBox>
 		</div>
 	</fieldset>
+
+	<fieldset class="fieldset" context="swg-slider">
+		<legend>
+			SWG-Slider
+		</legend>
+		<div class="content" style="width: 400px;">
+			<SWGSlider>
+				<SWGDraggableArea>
+					
+				</SWGDraggableArea>
+			</SWGSlider>
+		</div>
+	</fieldset>
 </main>
 
 <style>
