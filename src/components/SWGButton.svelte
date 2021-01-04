@@ -175,17 +175,6 @@ let callbacks = {
             detail
         );
     },
-    "keydown": function (e) {
-        //console.debug(e);
-
-        if(disabled) {
-            return;
-        }
-
-        if(e.key === "Enter") {
-            controller.click();
-        }
-    },
     "blur": function (e) {
         //console.debug(e);
 
@@ -220,7 +209,7 @@ let callbacks = {
     }
 };
 
-onMount(function(e) {
+onMount(function(e) {    
     controller.getData = function (key) {
         const messagePrefix = "\n\nCannot get data:\n";
         let message = messagePrefix;
@@ -289,13 +278,15 @@ onMount(function(e) {
                 throw new Error(message);
         }
     };
+
+    controller.toButton();
 });
 
 </script>
 
 <svelte:options accessors={true} />
 
-<div class="swg swg-button" role=button tabindex=0
+<div class="swg swg-button"
     bind:this={controller}
 
     {type}

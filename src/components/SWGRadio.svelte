@@ -17,6 +17,8 @@ const dispatch = createEventDispatcher();
 export let disabled   = false;
 export let checked    = false;
 
+export let controls   =  true;
+
 export let controller = null;
 export let value      =   "";
 
@@ -45,6 +47,7 @@ onMount(function(e) {
         let properties = {
             "disabled"  : disabled,
             "checked"   : checked,
+            "controls"  : controls,
 
             "value"     : value
         };
@@ -56,6 +59,7 @@ onMount(function(e) {
         switch(key) {
             case "disabled":
             case "checked":
+            case "controls":
             case "value":
                 return properties[key];
             break;
@@ -80,6 +84,9 @@ onMount(function(e) {
             break;
             case "checked":
                 checked = val;
+            break;
+            case "controls":
+                controls = val;
             break;
             case "value":
                 value = val;
@@ -106,9 +113,9 @@ onMount(function(e) {
 
         bind:disabled
         bind:checked
+        bind:controls
 
         on:swg-change
-        on:swg-focuschange
     >
         <div class="swg-radio-body" slot="body">
             <slot name="body"></slot>

@@ -163,6 +163,32 @@ let install = function () {
             ));
         }
     }
+
+    HTMLElement.prototype.toButton = function () {
+        this.setAttribute(
+            "role",
+            "button"
+        );
+
+        this.setAttribute(
+            "tabindex",
+            "0"
+        );
+
+        this.onkeydown = function (e) {
+            //console.debug(e);
+
+            let disabled = this.getData("disabled");
+        
+            if(disabled) {
+                return;
+            }
+            
+            if(e.key === "Enter") {
+                this.click();
+            }
+        };
+    }
 };
 
 export { install };

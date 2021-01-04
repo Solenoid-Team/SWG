@@ -11,13 +11,15 @@ import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
-export let disabled   = false;
-export let checked    = false;
+export let disabled   =     false;
+export let checked    =     false;
 
-export let controller = null;
-export let value      =   "";
+export let controls   =      true;
 
-let input             = null;
+export let controller =      null;
+export let value      =        "";
+
+let input             =      null;
 
 let dispatchEvent = function (
     eventType,
@@ -52,17 +54,6 @@ let callbacks = {
             "swg-change",
             detail
         );
-    },
-    "keydown": function (e) {
-        //console.debug(e);
-
-        if(disabled) {
-            return;
-        }
-
-        if(e.key === "Enter") {
-            controller.click();
-        }
     }
 };
 
@@ -76,6 +67,7 @@ onMount(function(e) {
         let properties = {
             "disabled"  : disabled,
             "checked"   : checked,
+            "controls"  : controls,
 
             "value"     : value
         };
@@ -87,6 +79,7 @@ onMount(function(e) {
         switch(key) {
             case "disabled":
             case "checked":
+            case "controls":
             case "value":
                 return properties[key];
             break;
@@ -112,6 +105,9 @@ onMount(function(e) {
             case "checked":
                 checked = val;
             break;
+            case "controls":
+                controls = val;
+            break;
             case "value":
                 value = val;
             break;
@@ -122,18 +118,20 @@ onMount(function(e) {
                 throw new Error(message);
         }
     };
+
+    if(controls) {
+        controller.toButton();
+    }
 });
 
 </script>
 
 <svelte:options accessors={true} />
 
-<label class="swg swg-checkbox" role=button tabindex=0
+<label class="swg swg-checkbox"
     bind:this={controller}
 
     {disabled}
-
-    on:keydown={callbacks["keydown"]}
 >
     <div class="swg-checkbox-body">
         <slot name="body"></slot>

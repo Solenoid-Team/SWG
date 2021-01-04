@@ -16,12 +16,14 @@ import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
-export let placeholder = null;
+export let placeholder =   null;
 
-export let controller  = null;
-export let value       = null;
+export let controller  =   null;
+export let value       =   null;
 
-let radioGroup         = null;
+let radioGroup         =   null;
+
+let state              = "down";
 
 let dispatchEvent = function (
     eventType,
@@ -40,7 +42,7 @@ let dispatchEvent = function (
 
 let callbacks = {
     "swg-change": function (e) {
-        
+
     }
 };
 
@@ -98,26 +100,37 @@ onMount(function(e) {
 >
     <div class="swg-select-box-current-value">
         <SWGButton
+            bind:value={state}
+
             type="text"
             state="secundary"
 
-            values={["show","hide"]}
+            values={["up","down"]}
 
             on:swg-change={callbacks["swg-change"]}
         >
-            {#if value === null}
-                {placeholder}
-            {:else}
-                {value}
-            {/if}
+            <div class="swg-select-box-current-value-text">
+                {#if value === null}
+                    {placeholder}
+                {:else}
+                    {value}
+                {/if}
+            </div>
+            <div class="swg-select-box-current-value-symbol">
+                <i class="fas fa-caret-{state}"></i>
+            </div>
         </SWGButton>
     </div>
-    <SWGRadioGroup
-        bind:controller={radioGroup}
-        bind:value
+    <div class="swg-select-box-radio-group-wrapper"
+        class:visible={state === "up"}
     >
-        <slot></slot>
-    </SWGRadioGroup>
+        <SWGRadioGroup
+            bind:controller={radioGroup}
+            bind:value
+        >
+            <slot></slot>
+        </SWGRadioGroup>
+    </div>
 </div>
 
 <style>
@@ -137,10 +150,46 @@ onMount(function(e) {
 .swg-select-box {
     width: 100%;
     display: block;
+    color: #515151;
+    border-radius: 5px;
 }
 
 .swg-select-box-current-value {
+    width: 100%;
+    border-radius: inherit;
+}
 
+.swg-select-box-radio-group-wrapper {
+    margin-top: 4px;
+    padding: 12px 0;
+    display: none;
+    background-color: #e7e7e7;
+    border-radius: inherit;
+}
+
+.swg-select-box-current-value :global(.swg-button) {
+    width: 100%;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.swg-select-box-current-value-text {
+    display: table;
+}
+
+.swg-select-box-current-value-symbol {
+    display: table;
+}
+
+.swg-select-box :global(.swg-radio-group) {
+    
+}
+
+.visible {
+    display: block;
 }
 
 </style>

@@ -14,13 +14,15 @@ import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
-export let disabled   = false;
-export let checked    = false;
+export let disabled   =  false;
+export let checked    =  false;
 
-export let controller = null;
-export let value      =   "";
+export let controller =  null;
+export let value      =    "";
 
-let radio             = null;
+let radio             =  null;
+
+let selected          = false;
 
 let dispatchEvent = function (
     eventType,
@@ -91,6 +93,8 @@ onMount(function(e) {
                 throw new Error(message);
         }
     };
+
+    controller.toButton();
 });
 
 </script>
@@ -99,6 +103,8 @@ onMount(function(e) {
 
 <div class="swg swg-select-item"
     bind:this={controller}
+
+    class:selected={checked}
 >
     <SWGRadio
         bind:controller={radio}
@@ -107,8 +113,9 @@ onMount(function(e) {
         bind:disabled
         bind:checked
 
+        controls={false}
+
         on:swg-change
-        on:swg-focuschange
     >
         <div slot="body"></div>
         <div class="swg-select-item-label" slot="label">
@@ -134,10 +141,13 @@ onMount(function(e) {
 
 .swg-select-item {
     width: 100%;
+    padding: 10px 16px;
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-items: center;
+    color: inherit;
+    cursor: pointer;
 }
 
 .swg-select-item-label {
@@ -158,6 +168,19 @@ onMount(function(e) {
 
 .swg-select-item :global(.swg-checkbox-label) {
     margin: 0;
+}
+
+.selected {
+    background-color: #00bd9c !important;
+}
+
+.selected :global(.swg-radio-label) {
+    color: #ffffff !important;
+}
+
+.swg-select-item:hover,
+.swg-select-item:focus {
+    background-color: #cccccc;
 }
 
 </style>
