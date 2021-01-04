@@ -41,13 +41,13 @@ let dispatchEvent = function (
 
 let callbacks = {
     "keydown": function (e) {
-        /*if(disabled) {
+        if(disabled) {
             return;
         }
 
         if(e.key === "Enter") {
-            checked = !checked;
-        }*/
+            radio.querySelector(".swg-checkbox").click();
+        }
     }
 };
 
