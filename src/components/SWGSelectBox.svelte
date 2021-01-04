@@ -3,11 +3,13 @@
 /*
     Dependencies:
         HTMLUtility.js
+        SWGButton.svelte
         SWGSelectBox.svelte
 */
 
 import { onMount } from 'svelte';
 
+import SWGButton from './SWGButton.svelte';
 import SWGRadioGroup from './SWGRadioGroup.svelte';
 
 import { createEventDispatcher } from 'svelte';
@@ -34,6 +36,12 @@ let dispatchEvent = function (
         eventType,
         detail
     );
+};
+
+let callbacks = {
+    "swg-change": function (e) {
+        
+    }
 };
 
 onMount(function(e) {
@@ -89,11 +97,20 @@ onMount(function(e) {
     bind:this={controller}
 >
     <div class="swg-select-box-current-value">
-        {#if value === null}
-            {placeholder}
-        {:else}
-            {value}
-        {/if}
+        <SWGButton
+            type="text"
+            state="secundary"
+
+            values={["show","hide"]}
+
+            on:swg-change={callbacks["swg-change"]}
+        >
+            {#if value === null}
+                {placeholder}
+            {:else}
+                {value}
+            {/if}
+        </SWGButton>
     </div>
     <SWGRadioGroup
         bind:controller={radioGroup}
@@ -118,7 +135,8 @@ onMount(function(e) {
 }
 
 .swg-select-box {
-
+    width: 100%;
+    display: block;
 }
 
 .swg-select-box-current-value {

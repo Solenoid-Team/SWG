@@ -116,8 +116,14 @@ onMount(function(e) {
         <div class="swg-radio-label" slot="label">
             <slot name="label"></slot>
         </div>
-        <div class="swg-radio-emulator" slot="emulator">
-            <i class="fas fa-circle"></i>
+        <div slot="emulator">
+            <slot name="emulator">
+                <div class="swg-radio-emulator-box">
+                    <div class="swg-radio-emulator">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+            </slot>
         </div>
     </SWGCheckbox>
 </div>
@@ -136,19 +142,70 @@ onMount(function(e) {
     box-sizing: border-box;
 }
 
+.swg-radio {
+    display: table;
+}
+
+.swg-radio-emulator-box {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+}
+
 .swg-radio-emulator {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-}
-
-.swg-radio :global(.swg-checkbox-emulator-box) {
-    border-radius: 100%;
-}
-
-.swg-radio :global(i) {
     font-size: 10px;
+    color: #ffffff;
+}
+
+.swg-radio :global(
+    input:not(:checked) + .swg-checkbox-footer .swg-radio-emulator-box
+) {
+    background-color: #e7e7e7;
+}
+.swg-radio :global(
+    input:not(:checked) + .swg-checkbox-footer .swg-radio-emulator
+) {
+    visibility: hidden;
+}
+.swg-radio :global(
+    .swg-checkbox:focus input:not(:checked) + .swg-checkbox-footer .swg-radio-emulator-box
+) {
+    border-color: #e1e1e1;
+    box-shadow: 0px 0px 4px 1px #cccccc;
+}
+
+.swg-radio :global(
+    input:checked + .swg-checkbox-footer .swg-radio-emulator-box
+) {
+    background-color: #00bd9c;
+}
+.swg-radio :global(
+    input:checked + .swg-checkbox-footer .swg-radio-emulator
+) {
+    visibility: visible;
+}
+.swg-radio :global(
+    .swg-checkbox:focus input:checked + .swg-checkbox-footer .swg-radio-emulator-box
+) {
+    border-color: #00ad8f;
+    box-shadow: 0px 0px 4px 1px #00bd9c;
+}
+
+.swg-radio :global(
+    .swg-checkbox-label
+) {
+    margin-left: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #515151;
 }
 
 </style>

@@ -113,6 +113,14 @@ onMount(function(e) {
             );
         }
     );
+
+    controller.delegateFor(
+        ".swg-radio",
+        "swg-focuschange",
+        function(e) {
+            e.originalEvent.stopPropagation();
+        }
+    );
 });
 
 </script>
@@ -137,6 +145,11 @@ onMount(function(e) {
     padding: 0;
     outline: none;
     box-sizing: border-box;
+}
+
+.swg-radio-group {
+    width: 100%;
+    display: block;
 }
 
 </style>

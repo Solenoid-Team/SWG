@@ -133,11 +133,31 @@ onMount(function(e) {
 }
 
 .swg-select-item {
-
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
 }
 
 .swg-select-item-label {
-    
+
+}
+
+.swg-select-item :global(.swg-radio) {
+    width: 100%;
+    display: block;
+}
+
+.swg-select-item :global(.swg-checkbox) {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.swg-select-item :global(.swg-checkbox-label) {
+    margin: 0;
 }
 
 </style>
