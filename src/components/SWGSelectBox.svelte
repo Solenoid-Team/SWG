@@ -89,6 +89,14 @@ onMount(function(e) {
                 throw new Error(message);
         }
     };
+
+    controller.delegateFor(
+        ".swg-button",
+        "swg-change",
+        function(e) {
+            e.originalEvent.stopPropagation();
+        }
+    );
 });
 
 </script>
@@ -97,6 +105,8 @@ onMount(function(e) {
 
 <div class="swg swg-select-box"
     bind:this={controller}
+
+    on:keydown={()=>{}}
 >
     <div class="swg-select-box-current-value">
         <SWGButton

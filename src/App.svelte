@@ -249,6 +249,17 @@ onMount(function(e) {
 			console.debug(e.info.data);
 		}
 	);
+	
+	// SWG-Select-Box
+
+	document.body.delegateFor(
+		".fieldset[context='swg-select-box'] .swg-select-box",
+		"swg-change",
+		function(e) {
+			console.debug("\n'swg-change' on SWG-Select-Box");
+			console.debug(e.info.data);
+		}
+	);
 });
 
 </script>
