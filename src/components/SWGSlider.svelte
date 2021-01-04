@@ -223,9 +223,7 @@ onMount(function(e) {
     on:blur={callbacks["blur"]}
     on:focus={callbacks["focus"]}
 >
-    <SWGDraggableArea>
-        
-    </SWGDraggableArea>
+    
 </div>
 
 <style>
