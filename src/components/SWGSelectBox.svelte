@@ -21,9 +21,14 @@ export let placeholder =   null;
 export let controller  =   null;
 export let value       =   null;
 
+let values             =     [];
+
 let radioGroup         =   null;
 
 let state              = "down";
+
+let timeout            =   null;
+let searchStream       =   null;
 
 let dispatchEvent = function (
     eventType,
@@ -41,9 +46,22 @@ let dispatchEvent = function (
 };
 
 let callbacks = {
-    "swg-change": function (e) {
+   "keydown": function (e) {
+        window.clearTimeout(timeout);
 
-    }
+        if(searchStream === null) {
+            searchStream = "";
+        }
+
+        timeout = window.setTimeout(
+            function() {
+                searchStream = "";
+            },
+            500
+        );
+
+        searchStream += e.key;
+   }
 };
 
 onMount(function(e) {
@@ -106,7 +124,7 @@ onMount(function(e) {
 <div class="swg swg-select-box"
     bind:this={controller}
 
-    on:keydown={()=>{}}
+    on:keydown={callbacks["keydown"]}
 >
     <div class="swg-select-box-current-value">
         <SWGButton
@@ -116,8 +134,6 @@ onMount(function(e) {
             state="secundary"
 
             values={["up","down"]}
-
-            on:swg-change={callbacks["swg-change"]}
         >
             <div class="swg-select-box-current-value-text">
                 {#if value === null}
@@ -137,6 +153,8 @@ onMount(function(e) {
         <SWGRadioGroup
             bind:controller={radioGroup}
             bind:value
+
+            bind:values
         >
             <slot></slot>
         </SWGRadioGroup>

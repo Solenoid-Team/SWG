@@ -11,6 +11,8 @@ import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
+export let values     =   [];
+
 export let controller = null;
 export let value      = null;
 
@@ -27,6 +29,19 @@ let dispatchEvent = function (
         eventType,
         detail
     );
+};
+
+let getValues = function () {
+    let result = [];
+
+    controller.querySelectorAll(".swg-checkbox").forEach(function(element) {
+        result.push({
+            "controller": element,
+            "value"     : element.getData("value")
+        });
+    });
+
+    return result;
 };
 
 onMount(function(e) {
@@ -121,6 +136,8 @@ onMount(function(e) {
             e.originalEvent.stopPropagation();
         }
     );
+
+    values = getValues();
 });
 
 </script>
