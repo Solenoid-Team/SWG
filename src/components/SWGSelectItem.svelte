@@ -131,11 +131,11 @@ onMount(function(e) {
 
         on:swg-change
     >
-        <div slot="body"></div>
-        <div class="swg-select-item-label" slot="label">
+        <div class="swg-select-item-radio-body" slot="body"></div>
+        <div class="swg-select-item-radio-label" slot="label">
             <slot name="label"></slot>
         </div>
-        <div slot="emulator"></div>
+        <div class="swg-select-item-radio-emulator" slot="emulator"></div>
     </SWGRadio>
 </div>
 
@@ -155,7 +155,6 @@ onMount(function(e) {
 
 .swg-select-item {
     width: 100%;
-    padding: 10px 16px;
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -164,13 +163,24 @@ onMount(function(e) {
     cursor: pointer;
 }
 
-.swg-select-item-label {
+.swg-select-item-radio-body {
+    /*display: none;*/
+}
+
+.swg-select-item-radio-label {
 
 }
 
-.swg-select-item :global(.swg-radio) {
-    width: 100%;
-    display: block;
+.swg-select-item-radio-emulator {
+    /*display: none;*/
+}
+
+.swg-select-item :global(.swg-checkbox-body) {
+    display: none;
+}
+
+.swg-select-item :global(.swg-radio-emulator-wrapper) {
+    display: none;
 }
 
 .swg-select-item :global(.swg-checkbox) {
@@ -182,6 +192,11 @@ onMount(function(e) {
 
 .swg-select-item :global(.swg-checkbox-label) {
     margin: 0;
+    padding: 10px 16px;
+}
+
+.swg-select-item :global(*) {
+    width: 100%;
 }
 
 .selected {

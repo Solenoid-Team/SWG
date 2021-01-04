@@ -123,7 +123,7 @@ onMount(function(e) {
         <div class="swg-radio-label" slot="label">
             <slot name="label"></slot>
         </div>
-        <div slot="emulator">
+        <div class="swg-radio-emulator-wrapper" slot="emulator">
             <slot name="emulator">
                 <div class="swg-radio-emulator-box">
                     <div class="swg-radio-emulator">
