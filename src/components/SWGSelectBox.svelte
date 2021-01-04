@@ -16,6 +16,7 @@ import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
+export let disabled    =  false;
 export let placeholder =   null;
 
 export let controller  =   null;
@@ -84,6 +85,7 @@ onMount(function(e) {
         let message = messagePrefix;
 
         let properties = {
+            "disabled"  : disabled,
             "value"     : value
         };
 
@@ -92,6 +94,7 @@ onMount(function(e) {
         }
 
         switch(key) {
+            case "disabled":
             case "value":
                 return properties[key];
             break;
@@ -111,6 +114,9 @@ onMount(function(e) {
         let message = messagePrefix;
 
         switch(key) {
+            case "disabled":
+                disabled = val;
+            break;
             case "value":
                 value = val;
             break;
@@ -143,6 +149,8 @@ onMount(function(e) {
     <div class="swg-select-box-current-value">
         <SWGButton
             bind:value={state}
+
+            bind:disabled
 
             type="text"
             state="secundary"

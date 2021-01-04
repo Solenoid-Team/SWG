@@ -501,6 +501,41 @@ onMount(function(e) {
 						Spain
 					</div>
 				</SWGSelectItem>
+				<SWGSelectItem value="China" disabled={true}>
+					<div slot="label">
+						China
+					</div>
+				</SWGSelectItem>
+			</SWGSelectBox>
+			<SWGSelectBox
+				placeholder="Disabled"
+				disabled={true}
+			>
+				<SWGSelectItem value="Italy">
+					<div slot="label">
+						Italy
+					</div>
+				</SWGSelectItem>
+				<SWGSelectItem value="France">
+					<div slot="label">
+						France
+					</div>
+				</SWGSelectItem>
+				<SWGSelectItem value="Germany">
+					<div slot="label">
+						Germany
+					</div>
+				</SWGSelectItem>
+				<SWGSelectItem value="Spain">
+					<div slot="label">
+						Spain
+					</div>
+				</SWGSelectItem>
+				<SWGSelectItem value="China" disabled={true}>
+					<div slot="label">
+						China
+					</div>
+				</SWGSelectItem>
 			</SWGSelectBox>
 		</div>
 	</fieldset>
