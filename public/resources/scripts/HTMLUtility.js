@@ -178,14 +178,16 @@ let install = function () {
         this.onkeydown = function (e) {
             //console.debug(e);
 
-            let disabled = this.getData("disabled");
+            let controller = this;
+
+            let disabled = controller.getData("disabled");
         
             if(disabled) {
                 return;
             }
             
             if(e.key === "Enter") {
-                this.click();
+                controller.click();
             }
         };
     }

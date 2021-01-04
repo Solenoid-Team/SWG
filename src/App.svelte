@@ -481,24 +481,24 @@ onMount(function(e) {
 			<SWGSelectBox
 				placeholder="Select an item"
 			>
-				<SWGSelectItem value="Item 1">
+				<SWGSelectItem value="Italy">
 					<div slot="label">
-						Item 1
+						Italy
 					</div>
 				</SWGSelectItem>
-				<SWGSelectItem value="Item 2">
+				<SWGSelectItem value="France">
 					<div slot="label">
-						Item 2
+						France
 					</div>
 				</SWGSelectItem>
-				<SWGSelectItem value="Item 3">
+				<SWGSelectItem value="Germany">
 					<div slot="label">
-						Item 3
+						Germany
 					</div>
 				</SWGSelectItem>
-				<SWGSelectItem value="Item 4">
+				<SWGSelectItem value="Spain">
 					<div slot="label">
-						Item 4
+						Spain
 					</div>
 				</SWGSelectItem>
 			</SWGSelectBox>

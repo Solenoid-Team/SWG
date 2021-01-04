@@ -39,6 +39,20 @@ let dispatchEvent = function (
     );
 };
 
+let callbacks = {
+    "keydown": function (e) {
+        /*if(disabled) {
+            return;
+        }
+
+        if(e.key === "Enter") {
+            checked = !checked;
+        }*/
+    }
+};
+
+$: console.debug(value + " " + checked);
+
 onMount(function(e) {
     controller.getData = function (key) {
         const messagePrefix = "\n\nCannot get data:\n";
@@ -105,6 +119,8 @@ onMount(function(e) {
     bind:this={controller}
 
     class:selected={checked}
+
+    on:keydown={callbacks["keydown"]}
 >
     <SWGRadio
         bind:controller={radio}

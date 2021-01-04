@@ -57,10 +57,24 @@ let callbacks = {
             function() {
                 searchStream = "";
             },
-            500
+            1000
         );
 
-        searchStream += e.key;
+        searchStream += e.key.toLowerCase();
+        
+        //console.debug(searchStream);
+
+        for(let i = 0; i < values.length; i++) {
+            let element = values[i];
+
+            let val = element.value.toLowerCase();
+
+            if(val.indexOf(searchStream) !== -1) {
+                element.controller.climbUntil("swg-select-item").focus();
+
+                break;
+            }
+        }
    }
 };
 
@@ -155,6 +169,8 @@ onMount(function(e) {
             bind:value
 
             bind:values
+
+            on:swg-change
         >
             <slot></slot>
         </SWGRadioGroup>

@@ -96,13 +96,22 @@ onMount(function(e) {
 
             e.originalEvent.stopPropagation();
 
-            controller.querySelectorAll(".swg-radio")
+            /*controller.querySelectorAll(".swg-radio")
             .forEach(function(element) {
                 element.setData(
                     "checked",
                     false
                 );
-            });
+            });*/
+
+            for(let i = 0; i < values.length; i++) {
+                let element = values[i];
+
+                element.controller.setData(
+                    "checked",
+                    false
+                );
+            }
 
             e.source.setData(
                 "checked",
@@ -146,6 +155,8 @@ onMount(function(e) {
 
 <div class="swg swg-radio-group"
     bind:this={controller}
+
+    on:swg-change
 >
     <slot></slot>
 </div>
