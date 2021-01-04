@@ -545,11 +545,7 @@ onMount(function(e) {
 			SWG-Slider
 		</legend>
 		<div class="content" style="width: 400px;">
-			<SWGSlider>
-				<SWGDraggableArea>
-					
-				</SWGDraggableArea>
-			</SWGSlider>
+			<SWGSlider />
 		</div>
 	</fieldset>
 </main>
