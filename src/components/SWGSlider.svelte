@@ -55,7 +55,7 @@ onMount(function(e) {
     container.querySelectorAll(".swg-slider-handler")
     .forEach(function(element) {
         element.toDraggable({
-            "container": container.parentNode,
+            "container": container,
             "handler"  : element
         });
     });
@@ -79,10 +79,10 @@ onMount(function(e) {
         </div>
     {/if}
 
-    <div class="swg-slider-bar-wrapper">
-        <div class="swg-slider-bar"
-            bind:this={container}
-        >
+    <div class="swg-slider-bar-wrapper"
+        bind:this={container}
+    >
+        <div class="swg-slider-bar">
             {#each values as val}
                 <div class="swg-slider-handler">
                     <SWGButton
@@ -157,6 +157,7 @@ onMount(function(e) {
     justify-content: left;
     align-items: center;
     background-color: #e7e7e7;
+    border-radius: 5px;
 }
 
 .swg-slider-handler {
