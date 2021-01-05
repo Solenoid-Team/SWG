@@ -11,6 +11,7 @@ import { onMount } from 'svelte';
 import SWGButton from './SWGButton.svelte';
 
 import { createEventDispatcher } from 'svelte';
+import { validate_slots } from 'svelte/internal';
 
 const dispatch = createEventDispatcher();
 
@@ -114,33 +115,74 @@ onMount(function(e) {
 
             let val = getValue(element);
 
+            let valRound = Math.round(val);
+
             //console.debug(val);
 
             let index = (i + 1);
 
-            if((values.length % 2) === 0) {// Length is even
-                if((index % 2) !== 0) {// Index is odd (range-start)
-                    if(val > values[i + 1]) {
-                        val = values[i + 1];
+            let isEven = ((values.length % 2) === 0);
 
-                        setValue(
-                            element,
-                            val
-                        );
+            if(isEven) {// Length is even
+                if(i < (values.length - 1)) {
+                    if(valRound > values[i + 1]) {
+                        valRound = values[i + 1];
                     }
-                } else {// Index is even (range-end)
-                    if(val < values[i - 1]) {
-                        val = values[i - 1];
 
-                        setValue(
-                            element,
-                            val
-                        );
+                    setValue(
+                        element,
+                        valRound
+                    );
+                }
+
+                if(i > 0) {
+                    if(valRound < values[i - 1]) {
+                        valRound = values[i - 1];
                     }
+
+                    setValue(
+                        element,
+                        valRound
+                    );
                 }
             }
 
-            values[i] = Math.round(val);
+            values[i] = valRound;
+
+            container.querySelectorAll(".swg-slider-handler")
+            .forEach(function(
+                element,
+                index
+            ) {
+                if(isEven) {// Length is even
+                    if(index === 0) {
+                        element.previousSibling.previousSibling
+                        .style.width
+                        =
+                        element.offsetLeft + "px";
+                    }
+
+                    else
+
+                    if(index === (values.length - 1)) {
+                        element.nextSibling.nextSibling
+                        .style.width
+                        =
+                        (container.offsetWidth - element.offsetLeft)
+                        +
+                        "px"
+                        ; 
+                    }
+
+                    if((index % 2) !== 0) {// Index is odd (range-start)
+                        
+                    } else {// Index is even (range-end)
+
+                    }
+                } else {// Length is odd
+
+                }
+            });
         }
     );
 });
@@ -168,6 +210,7 @@ onMount(function(e) {
     >
         <div class="swg-slider-bar">
             {#each values as val, i}
+                <div class="swg-slider-color-bar"></div>
                 <div class="swg-slider-handler">
                     <SWGButton
                         type="text"
@@ -179,6 +222,7 @@ onMount(function(e) {
                     </SWGButton>
                 </div>
             {/each}
+            <div class="swg-slider-color-bar"></div>
         </div>
     </div>
 
@@ -244,6 +288,13 @@ onMount(function(e) {
     align-items: center;
     background-color: #e7e7e7;
     border-radius: 5px;
+}
+
+.swg-slider-color-bar {
+    width: 0%;
+    height: 100%;
+    display: block;
+    background-color: #00bd9c;
 }
 
 .swg-slider-handler {
