@@ -3,16 +3,30 @@
 /*
  Dependencies:
     HTMLUtility.js
+    SWGDraggable.svelte
 */
 
 import { onMount } from 'svelte';
+
+import SWGButton from './SWGButton.svelte';
 
 import { createEventDispatcher } from 'svelte';
 
 const dispatch = createEventDispatcher();
 
-export let controller   =        null;
-export let value        =        null;
+export let disabled     =        false;
+export let orientation  = "horizontal";
+export let controls     =        false;
+
+export let minValue     =            0;
+export let maxValue     =          100;
+export let step         =            1;
+export let values       =           [];
+
+export let controller   =         null;
+export let value        =         null;
+
+let container           =         null;
 
 let dispatchEvent = function (
     eventType,
@@ -30,181 +44,21 @@ let dispatchEvent = function (
 };
 
 let callbacks = {
-    "click": function (e) {
-        //console.debug(e);
-
-        if(disabled) {
-            return;
-        }
-
-        if(values.length > 0) {
-            if(valueIndex === (values.length - 1)) {
-                valueIndex = -1;
-            }
-
-            valueIndex++;
-        }
-
-        if(valueIndex >= 0 && valueIndex <= (values.length - 1)) {
-            value = values[valueIndex];
-        } else {
-            value = value;
-        }
-        
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value": value
-            }
-        };
-
-        dispatchEvent(
-            "swg-input",
-            detail
-        );
-
-        if(values.length === 0) {
-            return;
-        }
-
-        dispatchEvent(
-            "swg-change",
-            detail
-        );
-    },
-    "mousedown": function (e) {
-        //console.debug(e);
-
-        if(disabled) {
-            return;
-        }
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value": value,
-                "state": "down"
-            }
-        };
-
-        dispatchEvent(
-            "swg-mousestatechange",
-            detail
-        );
-    },
-    "mouseup": function (e) {
-        //console.debug(e);
-
-        if(disabled) {
-            return;
-        }
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value": value,
-                "state": "up"
-            }
-        };
-
-        dispatchEvent(
-            "swg-mousestatechange",
-            detail
-        );
-    },
-    "mouseenter": function (e) {
-        //console.debug(e);
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value"   : value,
-                "position": "over",
-                "coords"  : {
-                    "x": e.clientX,
-                    "y": e.clientY
-                }
-            }
-        };
-
-        dispatchEvent(
-            "swg-mousepositionchange",
-            detail
-        );
-    },
-    "mouseleave": function (e) {
-        //console.debug(e);
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value"   : value,
-                "position": "out",
-                "coords"  : null
-            }
-        };
-
-        dispatchEvent(
-            "swg-mousepositionchange",
-            detail
-        );
-    },
-    "mousemove": function (e) {
-        //console.debug(e);
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value"   : value,
-                "position": "over",
-                "coords"  : {
-                    "x": e.clientX,
-                    "y": e.clientY
-                }
-            }
-        };
-
-        dispatchEvent(
-            "swg-mousepositionchange",
-            detail
-        );
-    },
-    "blur": function (e) {
-        //console.debug(e);
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value": value,
-                "focus": false
-            }
-        };
-
-        dispatchEvent(
-            "swg-focuschange",
-            detail
-        );
-    },
-    "focus": function (e) {
-        //console.debug(e);
-
-        let detail = {
-            "controller": controller,
-            "data": {
-                "value": value,
-                "focus": true
-            }
-        };
-
-        dispatchEvent(
-            "swg-focuschange",
-            detail
-        );
-    }
+    
 };
 
+$: minValue = parseFloat(minValue);
+$: maxValue = parseFloat(maxValue);
+$: step     = parseFloat(step);
+
 onMount(function(e) {    
-    
+    container.querySelectorAll(".swg-slider-handler")
+    .forEach(function(element) {
+        element.toDraggable({
+            "container": container,
+            "handler"  : element
+        });
+    });
 });
 
 </script>
@@ -213,17 +67,45 @@ onMount(function(e) {
 
 <div class="swg swg-slider"
     bind:this={controller}
-
-    on:click={callbacks["click"]}
-    on:mousedown={callbacks["mousedown"]}
-    on:mouseup={callbacks["mouseup"]}
-    on:mouseenter={callbacks["mouseenter"]}
-    on:mouseleave={callbacks["mouseleave"]}
-    on:keydown={callbacks["keydown"]}
-    on:blur={callbacks["blur"]}
-    on:focus={callbacks["focus"]}
 >
-    
+    {#if controls}
+        <div class="swg-slider-control swg-slider-control-decrement">
+            <SWGButton
+                type="text"
+                state="primary"
+            >
+                -
+            </SWGButton>
+        </div>
+    {/if}
+
+    <div class="swg-slider-bar-wrapper">
+        <div class="swg-slider-bar"
+            bind:this={container}
+        >
+            {#each values as val}
+                <div class="swg-slider-handler">
+                    <SWGButton
+                        type="text"
+                        state="primary"
+                    >
+
+                    </SWGButton>
+                </div>
+            {/each}
+        </div>
+    </div>
+
+    {#if controls}
+        <div class="swg-slider-control swg-slider-control-increment">
+            <SWGButton
+                type="text"
+                state="primary"
+            >
+                +
+            </SWGButton>
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -242,7 +124,59 @@ onMount(function(e) {
 
 .swg-slider {
     width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.swg-slider-control {
+
+}
+
+.swg-slider-control-decrement {
+
+}
+
+.swg-slider-bar-wrapper {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.swg-slider-bar {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    background-color: #e7e7e7;
+}
+
+.swg-slider-handler {
+    height: 100%;
+    display: table;
+    position: relative;
+    /*left: 0;
+    top: -10px;*/
+}
+
+.swg-slider-handler :global(.swg-button) {
+    margin-left: -10px;
+    width: 20px;
+    height: 40px;
+    margin: 0 !important;
+    padding: 0 !important;
     display: block;
+}
+
+.swg-slider-control-increment {
+
 }
 
 </style>

@@ -191,6 +191,110 @@ let install = function () {
             }
         };
     }
+
+    HTMLElement.prototype.toDraggable = function (settings) {
+        let element = this;
+
+        element.isDraggable = false;
+
+        let container = element.parentNode;
+        
+        if(settings.container) {
+            container = settings.container;
+        }
+
+        let handler = element;
+
+        if(settings.handler) {
+            handler = settings.handler;
+        }
+        
+        let drag = false;
+
+        container.style.position = "relative";
+        element.style.position   = "absolute";
+
+        let coords = {
+            "start": {
+                "x": 0,
+                "y": 0
+            },
+            "end": {
+                "x": 0,
+                "y": 0
+            }
+        };
+
+        let dx = 0;
+        let dy = 0;
+
+        handler.onmousedown = function (e) {
+            if(!element.isDraggable) {
+                return;
+            }
+
+            coords.start.x = e.pageX;
+            coords.start.y = e.pageY;
+
+            drag = true;
+        };
+
+        document.body.onmouseup = function (e) {
+            if(!element.isDraggable) {
+                return;
+            }
+
+            drag = false;
+        };
+
+        document.body.onmousemove = function (e) {
+            if(!element.isDraggable) {
+                return;
+            }
+
+            if(!drag) {
+                return;
+            }
+
+            coords.end.x = e.pageX;
+            coords.end.y = e.pageY;
+
+            dx = coords.end.x - coords.start.x;
+            dy = coords.end.y - coords.start.y;
+
+            coords.start.x = coords.end.x;
+            coords.start.y = coords.end.y;
+
+            //console.debug("dx=" + dx + " | dy=" + dy);
+
+            let x = element.offsetLeft + dx;
+
+            if(x < 0) {
+                x = 0;
+            }
+
+            if(x > container.offsetWidth) {
+                x = container.offsetWidth;
+            }
+
+            let y = element.offsetTop + dy;
+
+            if(y < 0) {
+                y = 0;
+            }
+
+            if(y > container.offsetHeight) {
+                y = container.offsetHeight;
+            }
+
+            //console.debug("x=" + x + " | y=" + y);
+
+            element.style.left = x + "px";
+            element.style.top  = y + "px";
+        };
+
+        element.isDraggable = true;
+    }
 };
 
 export { install };

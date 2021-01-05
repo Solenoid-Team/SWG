@@ -15,6 +15,7 @@ import SWGRadio from './components/SWGRadio.svelte';
 import SWGRadioGroup from './components/SWGRadioGroup.svelte';
 import SWGSelectBox from './components/SWGSelectBox.svelte';
 import SWGSelectItem from './components/SWGSelectItem.svelte';
+import SWGSlider from './components/SWGSlider.svelte';
 
 install();
 
@@ -545,7 +546,12 @@ onMount(function(e) {
 			SWG-Slider
 		</legend>
 		<div class="content" style="width: 400px;">
-			<SWGSlider />
+			<SWGSlider 
+				minValue=0
+				maxValue=100
+
+				values={[10]}
+			/>
 		</div>
 	</fieldset>
 </main>
