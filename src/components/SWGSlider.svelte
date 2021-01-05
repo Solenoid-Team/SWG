@@ -107,15 +107,40 @@ onMount(function(e) {
         "",
         "htmlutility-drag",
         function(e) {
+            let element = e.info.element;
+
             let button = e.info.element.querySelector(".swg-button");
 
-            let index = button.getData("value");
+            let i = button.getData("value");
 
-            let val = getValue(e.info.element);
+            let val = getValue(element);
 
             //console.debug(val);
 
-            values[index] = val;
+            let index = (i + 1);
+
+            /*if((values.length % 2) === 0) {// Length is even
+                if((index % 2) !== 0) {// Index is odd (range-start)
+                   
+                } else {// Index is even (range-end)
+
+                }
+            }*/
+
+            if(values.length > 0) {
+                element.draggableElement
+                =
+                (
+                    val <= values[i + 1]
+                )
+                ;
+
+                if(!element.draggableElement) {
+                    return;
+                }
+            }
+
+            values[i] = val;
         }
     );
 });
