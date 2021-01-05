@@ -55,8 +55,6 @@ let getValue = function (handler) {
     
     percentage = (percentage * length) / 100;
 
-    percentage = Math.round(percentage);
-
     return percentage;
 };
 
@@ -120,8 +118,6 @@ onMount(function(e) {
 
             let index = (i + 1);
 
-            let canMove = null;
-
             if((values.length % 2) === 0) {// Length is even
                 if((index % 2) !== 0) {// Index is odd (range-start)
                     if(val > values[i + 1]) {
@@ -144,7 +140,7 @@ onMount(function(e) {
                 }
             }
 
-            values[i] = val;
+            values[i] = Math.round(val);
         }
     );
 });
