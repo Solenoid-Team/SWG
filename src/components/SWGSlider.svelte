@@ -160,24 +160,54 @@ onMount(function(e) {
                         .style.width
                         =
                         element.offsetLeft + "px";
+
+                        element.nextSibling.nextSibling
+                        .style.width
+                        =
+                        (
+                            element.nextSibling.nextSibling
+                            .nextSibling.nextSibling
+                            .offsetLeft
+                            -
+                            element.offsetLeft
+                        )
+                        +
+                        "px"
+                        ;
                     }
 
                     else
 
                     if(index === (values.length - 1)) {
-                        element.nextSibling.nextSibling
+                        /*element.nextSibling.nextSibling
                         .style.width
                         =
                         (container.offsetWidth - element.offsetLeft)
                         +
                         "px"
-                        ; 
+                        ;*/ 
                     }
 
-                    if((index % 2) !== 0) {// Index is odd (range-start)
-                        
-                    } else {// Index is even (range-end)
+                    else 
 
+                    {
+                        if((index % 2) !== 0) {// Index is odd (range-start)
+                            element.nextSibling
+                            .style.width
+                            =
+                            (
+                                element.nextSibling.nextSibling
+                                .nextSibling
+                                .offsetLeft
+                                -
+                                element.offsetLeft
+                            )
+                            +
+                            "px"
+                            ;
+                        } else {// Index is even (range-end)
+                            element.previousSibling
+                        }
                     }
                 } else {// Length is odd
 
