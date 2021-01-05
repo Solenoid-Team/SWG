@@ -55,7 +55,7 @@ onMount(function(e) {
     container.querySelectorAll(".swg-slider-handler")
     .forEach(function(element) {
         element.toDraggable({
-            "container": container,
+            "container": container.parentNode,
             "handler"  : element
         });
     });

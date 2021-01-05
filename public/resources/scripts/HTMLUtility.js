@@ -211,8 +211,8 @@ let install = function () {
         
         let drag = false;
 
-        element.style.position            = "absolute";
-        container.style.position          = "relative";
+        element.style.position   = "absolute";
+        container.style.position = "relative";
 
         let coords = {
             "start": {
@@ -227,6 +227,12 @@ let install = function () {
 
         let dx = 0;
         let dy = 0;
+
+        let xMin = 0;
+        let xMax = container.offsetWidth;
+
+        let yMin = 0;
+        let yMax = container.offsetHeight - element.offsetHeight;
 
         handler.onmousedown = function (e) {
             if(!element.isDraggable) {
@@ -301,30 +307,30 @@ let install = function () {
 
             let x = left + dx;
 
-            if(x < 0) {
-                x = 0;
+            if(x < xMin) {
+                x = xMin;
             }
 
-            if(x > container.offsetWidth) {
-                x = container.offsetWidth;
+            if(x > xMax) {
+                x = xMax;
             }
 
             let top = element.offsetTop;
 
             let y = top + dy;
 
-            if(y < 0) {
-                y = 0;
+            if(y < yMin) {
+                y = yMin;
             }
 
-            if(y > container.offsetHeight) {
-                y = container.offsetHeight;
+            if(y > yMax) {
+                y = yMax;
             }
 
             //console.debug("x=" + x + " | y=" + y);
 
             element.style.left = x + "px";
-            //element.style.top  = y + "px";
+            element.style.top  = y + "px";
 
             let detail = {
                 "element": element,
