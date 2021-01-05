@@ -64,12 +64,13 @@ let setValue = function (
     handler,
     val
 ) {
-    let p = val;
-    let t = length;
+    let percentage = (val * 100) / length;
 
-    let percentage = (p / t) * 100;
+    let p = (percentage / 100) * container.offsetWidth;
 
-    handler.style.left = percentage + "%";
+    let x = p;
+
+    handler.style.left = x + "px";
 };
 
 let callbacks = {
@@ -119,26 +120,28 @@ onMount(function(e) {
 
             let index = (i + 1);
 
+            let canMove = null;
+
             if((values.length % 2) === 0) {// Length is even
                 if((index % 2) !== 0) {// Index is odd (range-start)
-                    element.draggableElement
-                    =
-                    (
-                        val <= values[i + 1]
-                    )
-                    ;
-                } else {// Index is even (range-end)
-                    element.draggableElement
-                    =
-                    (
-                        val >= values[i - 1]
-                    )
-                    ;
-                }
-            }
+                    if(val >= values[i + 1]) {
+                        val = values[i + 1];
 
-            if(!element.draggableElement) {
-                return;
+                        setValue(
+                            element,
+                            val
+                        );
+                    }
+                } else {// Index is even (range-end)
+                    if(val <= values[i + 1]) {
+                        val = values[i + 1];
+
+                        setValue(
+                            element,
+                            val
+                        );
+                    }
+                }
             }
 
             values[i] = val;
