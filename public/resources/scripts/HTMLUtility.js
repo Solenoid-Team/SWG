@@ -290,7 +290,7 @@ let install = function () {
             //console.debug("x=" + x + " | y=" + y);
 
             element.style.left = x + "px";
-            element.style.top  = y + "px";
+            //element.style.top  = y + "px";
         };
 
         element.isDraggable = true;

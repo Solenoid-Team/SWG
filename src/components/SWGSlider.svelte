@@ -142,6 +142,7 @@ onMount(function(e) {
 .swg-slider-bar-wrapper {
     width: 100%;
     height: 40px;
+    margin: 0 10px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -166,11 +167,11 @@ onMount(function(e) {
     top: -10px;*/
 }
 
-.swg-slider-handler :global(.swg-button) {
-    margin-left: -10px;
+.swg-slider .swg-slider-handler :global(.swg-button) {
     width: 20px;
     height: 40px;
     margin: 0 !important;
+    margin-left: -10px !important;
     padding: 0 !important;
     display: block;
 }
