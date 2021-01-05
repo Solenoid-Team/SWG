@@ -45,6 +45,33 @@ let dispatchEvent = function (
     );
 };
 
+let getValue = function (handler) {
+    let x = handler.offsetLeft;
+
+    let p =                     x;
+    let t = container.offsetWidth;
+
+    let percentage = (p / t) * 100;
+    
+    percentage = (percentage * length) / 100;
+
+    percentage = Math.round(percentage);
+
+    return percentage;
+};
+
+let setValue = function (
+    handler,
+    val
+) {
+    let p = val;
+    let t = length;
+
+    let percentage = (p / t) * 100;
+
+    handler.style.left = percentage + "%";
+};
+
 let callbacks = {
     
 };
@@ -54,6 +81,8 @@ $: maxValue = parseFloat(maxValue);
 $: step     = parseFloat(step);
 
 $: length   = maxValue - minValue;
+
+$: console.debug(values);
 
 onMount(function(e) {    
     container.querySelectorAll(".swg-slider-handler")
@@ -66,17 +95,29 @@ onMount(function(e) {
             "handler"  : element
         });
 
-        let v = values[index];
+        let val = values[index];
 
-        let p =      v;
-        let t = length;
-
-        let percentage = (p / t) * 100;
-
-        let x = percentage;
-
-        element.style.left = x + "%";
+        let percentage = setValue(
+            element,
+            val
+        );
     });
+
+    container.delegateFor(
+        "",
+        "htmlutility-drag",
+        function(e) {
+            let button = e.info.element.querySelector(".swg-button");
+
+            let index = button.getData("value");
+
+            let val = getValue(e.info.element);
+
+            //console.debug(val);
+
+            values[index] = val;
+        }
+    );
 });
 
 </script>

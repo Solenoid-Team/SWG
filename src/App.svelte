@@ -548,7 +548,7 @@ onMount(function(e) {
 		<div class="content" style="width: 400px;">
 			<SWGSlider 
 				minValue=0
-				maxValue=100
+				maxValue=300
 
 				values={[20,80]}
 			/>
