@@ -550,7 +550,7 @@ onMount(function(e) {
 				minValue=0
 				maxValue=100
 
-				values={[10]}
+				values={[10,20]}
 			/>
 		</div>
 	</fieldset>

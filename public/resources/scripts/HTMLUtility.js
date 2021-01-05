@@ -260,93 +260,97 @@ let install = function () {
             );
         };
 
-        document.body.onmouseup = function (e) {
-            if(!element.isDraggable) {
-                return;
-            }
-
-            drag = false;
-            
-            let detail = {
-                "element": element,
-                "data": {
-                    "coords": {
-                        "x": element.offsetLeft,
-                        "y": element.offsetTop
-                    }
+        document.body.addEventListener(
+            "mouseup",
+            function (e) {
+                if(!element.isDraggable) {
+                    return;
                 }
-            };
 
-            element.triggerEvent(
-                "htmlutility-dragend",
-                detail
-            );
-        };
-
-        document.body.onmousemove = function (e) {
-            if(!element.isDraggable) {
-                return;
-            }
-
-            if(!drag) {
-                return;
-            }
-
-            coords.end.x = e.pageX;
-            coords.end.y = e.pageY;
-
-            dx = coords.end.x - coords.start.x;
-            dy = coords.end.y - coords.start.y;
-
-            coords.start.x = coords.end.x;
-            coords.start.y = coords.end.y;
-
-            //console.debug("dx=" + dx + " | dy=" + dy);
-
-            let left = element.offsetLeft;
-
-            let x = left + dx;
-
-            if(x < xMin) {
-                x = xMin;
-            }
-
-            if(x > xMax) {
-                x = xMax;
-            }
-
-            let top = element.offsetTop;
-
-            let y = top + dy;
-
-            if(y < yMin) {
-                y = yMin;
-            }
-
-            if(y > yMax) {
-                y = yMax;
-            }
-
-            //console.debug("x=" + x + " | y=" + y);
-
-            element.style.left = x + "px";
-            element.style.top  = y + "px";
-
-            let detail = {
-                "element": element,
-                "data": {
-                    "coords": {
-                        "x": element.offsetLeft,
-                        "y": element.offsetTop
+                drag = false;
+                
+                let detail = {
+                    "element": element,
+                    "data": {
+                        "coords": {
+                            "x": element.offsetLeft,
+                            "y": element.offsetTop
+                        }
                     }
-                }
-            };
+                };
 
-            element.triggerEvent(
-                "htmlutility-drag",
-                detail
-            );
-        };
+                element.triggerEvent(
+                    "htmlutility-dragend",
+                    detail
+                );
+        });
+
+        document.body.addEventListener(
+            "mousemove",
+            function (e) {
+                if(!element.isDraggable) {
+                    return;
+                }
+
+                if(!drag) {
+                    return;
+                }
+
+                coords.end.x = e.pageX;
+                coords.end.y = e.pageY;
+
+                dx = coords.end.x - coords.start.x;
+                dy = coords.end.y - coords.start.y;
+
+                coords.start.x = coords.end.x;
+                coords.start.y = coords.end.y;
+
+                //console.debug("dx=" + dx + " | dy=" + dy);
+
+                let left = element.offsetLeft;
+
+                let x = left + dx;
+
+                if(x < xMin) {
+                    x = xMin;
+                }
+
+                if(x > xMax) {
+                    x = xMax;
+                }
+
+                let top = element.offsetTop;
+
+                let y = top + dy;
+
+                if(y < yMin) {
+                    y = yMin;
+                }
+
+                if(y > yMax) {
+                    y = yMax;
+                }
+
+                //console.debug("x=" + x + " | y=" + y);
+
+                element.style.left = x + "px";
+                element.style.top  = y + "px";
+
+                let detail = {
+                    "element": element,
+                    "data": {
+                        "coords": {
+                            "x": element.offsetLeft,
+                            "y": element.offsetTop
+                        }
+                    }
+                };
+
+                element.triggerEvent(
+                    "htmlutility-drag",
+                    detail
+                );
+        });
 
         element.isDraggable = true;
     }
