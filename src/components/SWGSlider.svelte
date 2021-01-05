@@ -124,7 +124,7 @@ onMount(function(e) {
 
             if((values.length % 2) === 0) {// Length is even
                 if((index % 2) !== 0) {// Index is odd (range-start)
-                    if(val >= values[i + 1]) {
+                    if(val > values[i + 1]) {
                         val = values[i + 1];
 
                         setValue(
@@ -133,8 +133,8 @@ onMount(function(e) {
                         );
                     }
                 } else {// Index is even (range-end)
-                    if(val <= values[i + 1]) {
-                        val = values[i + 1];
+                    if(val < values[i - 1]) {
+                        val = values[i - 1];
 
                         setValue(
                             element,
