@@ -119,25 +119,26 @@ onMount(function(e) {
 
             let index = (i + 1);
 
-            /*if((values.length % 2) === 0) {// Length is even
+            if((values.length % 2) === 0) {// Length is even
                 if((index % 2) !== 0) {// Index is odd (range-start)
-                   
+                    element.draggableElement
+                    =
+                    (
+                        val <= values[i + 1]
+                    )
+                    ;
                 } else {// Index is even (range-end)
-
+                    element.draggableElement
+                    =
+                    (
+                        val >= values[i - 1]
+                    )
+                    ;
                 }
-            }*/
+            }
 
-            if(values.length > 0) {
-                element.draggableElement
-                =
-                (
-                    val <= values[i + 1]
-                )
-                ;
-
-                if(!element.draggableElement) {
-                    return;
-                }
+            if(!element.draggableElement) {
+                return;
             }
 
             values[i] = val;
