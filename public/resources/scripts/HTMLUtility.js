@@ -195,7 +195,7 @@ let install = function () {
     HTMLElement.prototype.toDraggable = function (settings) {
         let element = this;
 
-        element.isDraggable = false;
+        element.draggableElement = false;
 
         let container = element.parentNode;
         
@@ -235,7 +235,7 @@ let install = function () {
         let yMax = container.offsetHeight - element.offsetHeight;
 
         handler.onmousedown = function (e) {
-            if(!element.isDraggable) {
+            if(!element.draggableElement) {
                 return;
             }
 
@@ -262,8 +262,8 @@ let install = function () {
 
         document.body.addEventListener(
             "mouseup",
-            function (e) {
-                if(!element.isDraggable) {
+            function(e) {
+                if(!element.draggableElement) {
                     return;
                 }
 
@@ -287,8 +287,8 @@ let install = function () {
 
         document.body.addEventListener(
             "mousemove",
-            function (e) {
-                if(!element.isDraggable) {
+            function(e) {
+                if(!element.draggableElement) {
                     return;
                 }
 
@@ -352,7 +352,7 @@ let install = function () {
                 );
         });
 
-        element.isDraggable = true;
+        element.draggableElement = true;
     }
 };
 

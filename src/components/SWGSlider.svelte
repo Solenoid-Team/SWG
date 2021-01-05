@@ -58,6 +58,8 @@ onMount(function(e) {
             "container": container,
             "handler"  : element
         });
+
+        element.style.left = x + "px";
     });
 });
 
@@ -83,11 +85,13 @@ onMount(function(e) {
         bind:this={container}
     >
         <div class="swg-slider-bar">
-            {#each values as val}
+            {#each values as val, i}
                 <div class="swg-slider-handler">
                     <SWGButton
                         type="text"
                         state="primary"
+
+                        value={i}
                     >
 
                     </SWGButton>
