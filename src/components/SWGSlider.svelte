@@ -28,6 +28,8 @@ export let value        =         null;
 
 let container           =         null;
 
+let length              =         null;
+
 let dispatchEvent = function (
     eventType,
     detail
@@ -51,15 +53,29 @@ $: minValue = parseFloat(minValue);
 $: maxValue = parseFloat(maxValue);
 $: step     = parseFloat(step);
 
+$: length   = maxValue - minValue;
+
 onMount(function(e) {    
     container.querySelectorAll(".swg-slider-handler")
-    .forEach(function(element) {
+    .forEach(function(
+        element,
+        index
+    ) {
         element.toDraggable({
             "container": container,
             "handler"  : element
         });
 
-        element.style.left = x + "px";
+        let v = values[index];
+
+        let p =      v;
+        let t = length;
+
+        let percentage = (p / t) * 100;
+
+        let x = percentage;
+
+        element.style.left = x + "%";
     });
 });
 
