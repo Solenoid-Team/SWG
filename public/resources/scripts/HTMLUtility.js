@@ -211,8 +211,8 @@ let install = function () {
         
         let drag = false;
 
-        container.style.position = "relative";
-        element.style.position   = "absolute";
+        element.style.position            = "absolute";
+        container.style.position          = "relative";
 
         let coords = {
             "start": {
@@ -237,6 +237,21 @@ let install = function () {
             coords.start.y = e.pageY;
 
             drag = true;
+
+            let detail = {
+                "element": element,
+                "data": {
+                    "coords": {
+                        "x": element.offsetLeft,
+                        "y": element.offsetTop
+                    }
+                }
+            };
+
+            element.triggerEvent(
+                "htmlutility-dragstart",
+                detail
+            );
         };
 
         document.body.onmouseup = function (e) {
@@ -245,6 +260,21 @@ let install = function () {
             }
 
             drag = false;
+            
+            let detail = {
+                "element": element,
+                "data": {
+                    "coords": {
+                        "x": element.offsetLeft,
+                        "y": element.offsetTop
+                    }
+                }
+            };
+
+            element.triggerEvent(
+                "htmlutility-dragend",
+                detail
+            );
         };
 
         document.body.onmousemove = function (e) {
@@ -267,7 +297,9 @@ let install = function () {
 
             //console.debug("dx=" + dx + " | dy=" + dy);
 
-            let x = element.offsetLeft + dx;
+            let left = element.offsetLeft;
+
+            let x = left + dx;
 
             if(x < 0) {
                 x = 0;
@@ -277,7 +309,9 @@ let install = function () {
                 x = container.offsetWidth;
             }
 
-            let y = element.offsetTop + dy;
+            let top = element.offsetTop;
+
+            let y = top + dy;
 
             if(y < 0) {
                 y = 0;
@@ -291,6 +325,21 @@ let install = function () {
 
             element.style.left = x + "px";
             //element.style.top  = y + "px";
+
+            let detail = {
+                "element": element,
+                "data": {
+                    "coords": {
+                        "x": element.offsetLeft,
+                        "y": element.offsetTop
+                    }
+                }
+            };
+
+            element.triggerEvent(
+                "htmlutility-drag",
+                detail
+            );
         };
 
         element.isDraggable = true;
